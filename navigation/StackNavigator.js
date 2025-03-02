@@ -124,6 +124,31 @@ const StackNavigator = () => {
                     }}
                 />
 
+                <Tab.Screen 
+                    name="Profile" 
+                    component={ProfileScreen}
+                    options={{
+                        tabBarStyle: {backgroundColor: '#101010'},
+                        headerShown: false,
+                        tabBarIcon: ({ focused }) =>
+                            focused ? (
+                                <Ionicons
+                                    style={{ paddingTop: 3 }}
+                                    name="person-circle-outline"
+                                    size={28}
+                                    color="white"
+                                />
+                            ) : (
+                                <Ionicons
+                                    style={{ paddingTop: 3 }}
+                                    name="person-circle-outline"
+                                    size={28}
+                                    color="#989898"
+                                />
+                            ),
+                    }}
+                />
+
             </Tab.Navigator>
         );
     }
