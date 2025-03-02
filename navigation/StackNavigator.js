@@ -73,6 +73,31 @@ const StackNavigator = () => {
                             ),
                     }}
                 />
+
+                <Tab.Screen 
+                    name="Likes" 
+                    component={LikesScreen}
+                    options={{
+                        tabBarStyle: {backgroundColor: '#101010'},
+                        headerShown: false,
+                        tabBarIcon: ({ focused }) =>
+                            focused ? (
+                                <Entypo
+                                    style={{ paddingTop: 3 }}
+                                    name="heart"
+                                    size={30}
+                                    color="white"
+                                />
+                            ) : (
+                                <Entypo
+                                    style={{ paddingTop: 3 }}
+                                    name="heart"
+                                    size={30}
+                                    color="#989898"
+                                />
+                            ),
+                    }}
+                />
             </Tab.Navigator>
         );
     }
