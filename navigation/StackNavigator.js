@@ -1,9 +1,42 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {NavigationContainer} from '@react-navigation/native';
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from '../screens/HomeScreen';
+import Entypo from '@expo/vector-icons/Entypo';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Text } from "react-native";
+import LikesScreen from '../screens/LikesScreen';
+import ChatScreen from '../screens/ChatScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import LoginScreen from '../screens/LoginScreen';
+import BasicInfo from '../screens/BasicInfo';
+import NameScreen from '../screens/NameScreen';
+import EmailScreen from '../screens/EmailScreen';
+import OtpScreen from '../screens/OtpScreen';
+import PasswordScreen from '../screens/PasswordScreen';
+import DateOfBirthScreen from '../screens/DateOfBirthScreen';
+import LocationScreen from '../screens/LocationScreen';
+import GenderScreen from '../screens/GenderScreen';
+import TypeScreen from '../screens/TypeScreen';
+import DatingType from '../screens/DatingType';
+import LookingForScreen from '../screens/LookingFor';
+import HomeTownScreen from '../screens/HomeTownScreen';
+import WorkPlace from '../screens/WorkPlace';
+import JobTitleScreen from '../screens/JobTitleScreen';
+import PhotoScreen from '../screens/PhotoScreen';
+import PromptsScreen from '../screens/PromptsScreen';
+import ShowPromptsScreen from '../screens/ShowPromptsScreen';
+import PreFinalScreen from '../screens/PreFinalScreen';
+import WritePrompt from '../screens/WritePrompt';
+import SendLikeScreen from '../screens/SendLikeScreen';
+import HandleLikeScreen from '../screens/HandleLikeScreen';
+import ChatRoom from '../screens/ChatRoom';
+import SubscriptionScreen from '../screens/SubscriptionScreen';
+import ProfileDetailScreen from '../screens/ProfileDetailScreen';
+
 
 const StackNavigator = () => {
     const Stack = createNativeStackNavigator();
