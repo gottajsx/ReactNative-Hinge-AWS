@@ -1,3 +1,5 @@
+import { Text } from "react-native";
+
 const OtpScreen = () => {
     return(
         <Text>

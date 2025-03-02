@@ -1,3 +1,5 @@
+import { Text } from "react-native";
+
 const PasswordScreen = () => {
     return(
         <Text>
