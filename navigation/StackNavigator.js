@@ -155,7 +155,13 @@ const StackNavigator = () => {
 
     const AuthStack = () => {
         return(
-            <Text>AuthStack</Text>
+            <Stack.Navigator>
+                <Stack.Screen 
+                    name="Login"
+                    component={LoginScreen}
+                    options={{headerShown: false}}
+                />
+            </Stack.Navigator>
         );
     };
 
@@ -172,7 +178,8 @@ const StackNavigator = () => {
 
     return (
         <NavigationContainer>
-            <MainStack />
+            {/* <MainStack /> */}
+            <AuthStack  />
         </NavigationContainer>
     );
 
