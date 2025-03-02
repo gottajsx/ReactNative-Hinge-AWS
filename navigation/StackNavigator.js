@@ -98,6 +98,32 @@ const StackNavigator = () => {
                             ),
                     }}
                 />
+
+                <Tab.Screen 
+                    name="Chat" 
+                    component={ChatScreen}
+                    options={{
+                        tabBarStyle: {backgroundColor: '#101010'},
+                        headerShown: false,
+                        tabBarIcon: ({ focused }) =>
+                            focused ? (
+                                <MaterialIcons
+                                    style={{ paddingTop: 3 }}
+                                    name="chat-bubble-outline"
+                                    size={30}
+                                    color="white"
+                                />
+                            ) : (
+                                <MaterialIcons
+                                    style={{ paddingTop: 3 }}
+                                    name="chat-bubble-outline"
+                                    size={30}
+                                    color="#989898"
+                                />
+                            ),
+                    }}
+                />
+
             </Tab.Navigator>
         );
     }
