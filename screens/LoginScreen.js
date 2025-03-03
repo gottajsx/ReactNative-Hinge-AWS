@@ -121,8 +121,42 @@ const LoginScreen = () => {
                                             />
                                         </View>
                                     </View>
-
                                     
+                                    <View style={{marginTop: 20}}>
+                                        <View
+                                            style={{
+                                                padding: 14,
+                                                backgroundColor: 'white',
+                                                borderRadius: 8,
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                gap: 15,
+                                                borderColor: '#E0E0E0',
+                                                borderWidth: 0.6,
+                                            }}>
+                                                <Text style={{fontSize: 14, color: '#800080', width: 70}}>
+                                                    Password
+                                                </Text>
+                                                <TextInput
+                                                    secureTextEntry={true}
+                                                    value={password}
+                                                    onChangeText={text => setPassword(text)}
+                                                    placeholder="Required"
+                                                    placeholderTextColor={'gray'}
+                                                />
+                                        </View>
+                                    </View>
+
+                                    <View 
+                                        style={{
+                                            marginTop: 12,
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                    }}>
+                                        <Text>Keep me logged in</Text>
+                                        <Text>Forgot Password</Text>
+                                    </View>
                                 </View>
                             </>
                         ) : (
