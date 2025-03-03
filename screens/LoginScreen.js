@@ -179,14 +179,53 @@ const LoginScreen = () => {
 
                         <View style={{marginTop: 40}} />
 
-                        
-
+                        <Pressable 
+                            onPress={createAccount}
+                            style={{
+                                width: 300,
+                                backgroundColor:  option == 'Create account' ? '#581845' : 'transparent',
+                                borderRadius: 6,
+                                marginLeft: 'auto',
+                                marginRight: 'auto',
+                                padding: 15,
+                                borderRadius: 30,
+                        }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                color: option == 'Create account' ? 'white' : 'black',
+                                fontSize: 16,
+                                fontWeight: 'bold',
+                            }}>
+                                Create Account
+                            </Text>
+                        </Pressable>
+                        <Pressable 
+                            onPress={handleLogin}
+                            style={{
+                                width: 300,
+                                backgroundColor:  option == 'Sign In' ? '#581845' : 'transparent',
+                                borderRadius: 6,
+                                marginLeft: 'auto',
+                                marginRight: 'auto',
+                                padding: 15,
+                                borderRadius: 30,
+                        }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                color: option == 'Sign In' ? 'white' : 'black',
+                                fontSize: 16,
+                                fontWeight: 'bold',
+                            }}>
+                                Sign In
+                            </Text>
+                        </Pressable>
                     </View>
                 </KeyboardAvoidingView>
-
             </View>
         </SafeAreaView>
     );
 }
 
 export default LoginScreen;
+
+const styles = StyleSheet.create({});
