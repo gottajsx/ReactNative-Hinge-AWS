@@ -95,7 +95,7 @@ const LoginScreen = () => {
                     )}
 
                     <View style={{marginHorizontal: 20, marginTop: 20}}>
-                        { option == 'Sign In'} ? (
+                        { option == 'Sign In' ? (
                             <>
                                 <View>
                                     <View style={{marginTop: 14}}>
@@ -161,9 +161,26 @@ const LoginScreen = () => {
                             </>
                         ) : (
                             <View>
-
+                                <LottieView 
+                                    source={require('../assets/login.json')}
+                                    style={{
+                                        height: 180,
+                                        width: 300,
+                                        alignSelf: 'center',
+                                        marginTop: 40,
+                                        justifyContent: 'center'
+                                    }}
+                                    autoPlay
+                                    loop={true}
+                                    speed={0.7}
+                                />
                             </View>
-                        )
+                        )}
+
+                        <View style={{marginTop: 40}} />
+
+                        
+
                     </View>
                 </KeyboardAvoidingView>
 
