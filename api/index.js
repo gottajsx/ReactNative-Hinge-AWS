@@ -274,8 +274,28 @@ app.get('/user_info', async (req, res) => {
 });
 
 const authenticateToken = (req, res, next) => {
-    console.log('authenticateToKen function')
-}
+    const authHeader = req.headers['authorization'];
+
+    if (!authHeader) {
+        return res.status(404).json({message: 'Token is required'});
+    }
+
+    const token = authHeader.split(' ')[1];
+    console.log('recieived token', token);
+
+    const secretKey =
+        '582e6b12ec6da3125121e9be07d00f63495ace020ec9079c30abeebd329986c5c35548b068ddb4b187391a5490c880137c1528c76ce2feacc5ad781a742e2de0'; // Use a better key management
+
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) {
+            return res.status(403).json({message: 'Invalid or expired token'});
+        }
+
+        req.user = user;
+        next();
+    });   
+};
+    
 
 app.get('/like_profile', authenticateToken, (req, res) => {
     try {
