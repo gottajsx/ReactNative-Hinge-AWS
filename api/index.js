@@ -418,7 +418,6 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
     }
   });
 
-
 app.get('/received-likes/:userId', authenticateToken, async (req, res) => {
     const {userId} = req.params;
   
@@ -474,17 +473,72 @@ app.get('/received-likes/:userId', authenticateToken, async (req, res) => {
         }
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
+    const {email, password} = req.body;
+  
+    console.log('Email', email);
+    console.log('password', password);
+  
+    const authParams = {
+        AuthFlow: 'USER_PASSWORD_AUTH',
+        ClientId: '',
+        AuthParameters: {
+            USERNAME: email,
+            PASSWORD: password,
+        },
+    };
+  
     try {
-        console.log('POST /login api endpoint');
+        const authCommand = new InitiateAuthCommand(authParams);
+        const authResult = await cognitoClient.send(authCommand);
+  
+        const {IdToken, AccessToken, RefreshToken} =
+            authResult.AuthenticationResult;
+  
+        const userParams = {
+            TableName: 'users',
+            IndexName: 'email-index',
+            KeyConditionExpression: 'email = :emailValue',
+            ExpressionAttributeValues: {
+                ':emailValue': {S: email},
+            },
+        };
+  
+        const userResult = await dynamoDbClient.send(new QueryCommand(userParams));
+  
+        if (!userResult.Items || userResult.Items.length == 0) {
+            return res.status(404).json({error: 'User not found'});
+        }
+  
+        const user = userResult.Items[0];
+        const userId = user?.userId.S;
+  
+        const secretKey =
+            '582e6b12ec6da3125121e9be07d00f63495ace020ec9079c30abeebd329986c5c35548b068ddb4b187391a5490c880137c1528c76ce2feacc5ad781a742e2de0'; // Use a better key management
+  
+        const token = jwt.sign({userId: userId, email: email}, secretKey);
+  
+        res.status(200).json({token, IdToken, AccessToken});
     } catch (error) {
-        console.log('Error ', error);
+        console.log('Error', error);
+        return res.status(500).json({message: 'Interval server error'});
     }
 });
 
-function getIndexToRemove(selectedUserId, currentUserId) {
-    console.log('getIndexToRemove api function')
-}
+async function getIndexToRemove(selectedUserId, currentUserId) {
+    const result = await docClient.send(
+        new GetCommand({
+            TableName: 'users',
+            Key: {userId: selectedUserId},
+            ProjectionExpression: 'likedProfiles',
+        }),
+    );
+  
+    const likedProfiles = result?.Item?.likedProfiles || [];
+    return likedProfiles?.findIndex(
+        profile => profile.likedUserId == currentUserId,
+    );
+  }
 
 app.get('/get-matches/:userId', authenticateToken, (req, res) => {
     try {
