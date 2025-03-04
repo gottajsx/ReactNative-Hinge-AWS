@@ -100,19 +100,47 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/sendOtp', (req, res) => {
+app.post('/sendOtp', async (req, res) => {
+    const {email, password} = req.body;
+    console.log('email', email);
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({error: 'Invalid email format.'});
+    }
+
+    const signUpParams = {
+        ClientId: '',
+        Username: email,
+        Password: password,
+        UserAttributes: [{Name: 'email', Value: email}],
+    }
+
     try {
-        console.log('POST /sendOtp api endpoint');
+        const command = new SignUpCommand(signUpParams);
+        await cognitoClient.send(command);
+
+        res.status(200).json({message: 'OTP sent to email!'});
     } catch (error) {
-        console.log('Error ', error);
+        console.error('Error sending OTP:', error)
+        res.status(400).json({error: 'Failed to send OTP. Please try again.'});
     }
 });
 
-app.post('/resendOtp', (req, res) => {
+app.post('/resendOtp', async (req, res) => {
+    const {email} = req.body;
+
+    const resendParams = {
+        ClientId: '',
+        Username: email,
+    };
+
     try {
-        console.log('POST /resendOtp api endpoint');
+        const command = new ResendConfirmationCodeCommand(resendParams);
+        await cognitoClient.send(command);
+
+        res.status(200).json({message: 'New otp sent to mail'});
     } catch (error) {
-        console.log('Error ', error);
+        console.log('Error', error);
     }
 });
 
