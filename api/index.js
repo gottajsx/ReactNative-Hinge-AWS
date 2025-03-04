@@ -590,6 +590,383 @@ app.get('/get-matches/:userId', authenticateToken, async (req, res) => {
              console.log('Error getting matches', error);
     }
 });
+
+
+server.listen(4000, () => {
+    console.log('Server is running on port 4000');
+});
+  
+const io = new Server(server);
+  
+const userSocketMap = {};
+  
+io.on('connection', socket => {
+    const userId = socket.handshake.query.userId;
+  
+    if (userId !== undefined) {
+        userSocketMap[userId] = socket.id;
+    }
+  
+    console.log('User socket data', userSocketMap);
+  
+    socket.on('disconnect', () => {
+        console.log('User disconnected', socket.id);
+        delete userSocketMap[userId];
+    });
+  
+    socket.on('sendMessage', ({senderId, receiverId, message}) => {
+        const receiverSocketId = userSocketMap[receiverId];
+  
+        console.log('receiver ID', receiverId);
+  
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('receiveMessage', {
+                senderId,
+                message,
+            });
+        }
+    });
+  });
+  
+
+  app.post('/sendMessage', async (req, res) => {
+    try {
+        const {senderId, receiverId, message} = req.body;
+  
+        if (!senderId || !receiverId || !message) {
+            return res.status(400).json({error: 'Missing fields'});
+        }
+  
+        const messageId = crypto.randomUUID();
+  
+        const params = {
+            TableName: 'messages',
+            Item: {
+                messageId: {S: messageId},
+                senderId: {S: senderId},
+                receiverId: {S: receiverId},
+                message: {S: message},
+                timestamp: {S: new Date().toISOString()},
+            },
+        };
+  
+        const command = new PutItemCommand(params);
+        await dynamoDbClient.send(command);
+  
+        const receiverSocketId = userSocketMap[receiverId];
+        if (receiverSocketId) {
+            console.log('Emitting new message to the reciever', receiverId);
+            io.to(receiverSocketId).emit('newMessage', {
+                senderId,
+                receiverId,
+                message,
+                });
+        } else {
+            console.log('Receiver socket ID not found');
+        }
+  
+        res.status(201).json({message: 'Message sent successfully!'});
+    } catch (error) {
+        console.log('Error', error);
+        res.status(500).json({message: 'internal server error'});
+    }
+});
+
+
+app.get('/messages', async (req, res) => {
+    try {
+        const {senderId, receiverId} = req.query;
+  
+        if (!senderId || !receiverId) {
+            return res.status(400).json({error: 'missing fields'});
+        }
+  
+        const senderQueryParams = {
+            TableName: 'messages',
+            IndexName: 'senderId-index',
+            KeyConditionExpression: 'senderId = :senderId',
+            ExpressionAttributeValues: {
+                ':senderId': {S: senderId},
+            },
+        };
+  
+        const receiverQueryParams = {
+            TableName: 'messages',
+            IndexName: 'receiverId-index',
+            KeyConditionExpression: 'receiverId = :receiverId',
+            ExpressionAttributeValues: {
+                ':receiverId': {S: senderId},
+            },
+        };
+  
+        const senderQueryCommand = new QueryCommand(senderQueryParams);
+        const receiverQueryCommand = new QueryCommand(receiverQueryParams);
+  
+        const senderResults = await dynamoDbClient.send(senderQueryCommand);
+        const receiverResults = await dynamoDbClient.send(receiverQueryCommand);
+  
+        const filteredSenderMessages = senderResults.Items.filter(
+            item => item.receiverId.S == receiverId,
+        );
+  
+        const filteredReceiverMessages = receiverResults.Items.filter(
+            item => item.senderId.S == receiverId,
+        );
+  
+        const combinedMessages = [
+            ...filteredSenderMessages,
+            ...filteredReceiverMessages,
+        ]
+        .map(item => ({
+            messageId: item.messageId.S,
+            senderId: item.senderId.S,
+            receiverId: item.receiverId.S,
+            message: item.message.S,
+            timestamp: item.timestamp.S,
+        }))
+        .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  
+        res.status(200).json(combinedMessages);
+    } catch (error) {
+        console.log('Error fetching messages', error);
+    }
+});
+
+
+app.post('/subscribe', authenticateToken, async (req, res) => {
+    const {userId, plan, type} = req.body;
+  
+    console.log('User', userId);
+    console.log('plan', plan);
+    console.log('type', type);
+  
+    if (!userId || !plan) {
+        return res.status(400).json({message: 'Missing required fields'});
+    }
+  
+    try {
+        const startDate = new Date().toISOString();
+        const duration =
+            plan?.plan === '1 week'
+            ? 7
+            : plan?.plan === '1 month'
+            ? 30
+            : plan?.plan === '3 months'
+            ? 90
+            : 180;
+        const endDate = dayjs(startDate).add(duration, 'day').toISOString();
+  
+        const paymentId = crypto.randomUUID();
+  
+        const params = {
+            TableName: 'subscriptions',
+            Item: {
+                userId: {S: userId},
+                subscriptionId: {S: paymentId},
+                plan: {S: type},
+                planName: {S: plan?.plan},
+                price: {S: plan?.price},
+                startDate: {S: startDate},
+                endDate: {S: endDate},
+                status: {S: 'active'},
+            },
+        };
+  
+        await dynamoDbClient.send(new PutItemCommand(params));
+  
+        const updateParams = {
+            TableName: 'users',
+            Key: {userId: {S: userId}},
+            UpdateExpression:
+                'SET subscriptions = list_append(if_not_exists(subscriptions, :empty_list), :new_subscription)',
+            ExpressionAttributeValues: {
+                ':new_subscription': {
+                    L: [
+                        {
+                            M: {
+                                subscriptionId: {S: paymentId},
+                                planName: {S: plan.plan},
+                                price: {S: plan.price},
+                                plan: {S: type},
+                                startDate: {S: startDate},
+                                endDate: {S: endDate},
+                                status: {S: 'active'},
+                            },
+                        },
+                    ],
+                },
+                ':empty_list': {L: []},
+            },
+            ReturnValues: 'UPDATED_NEW',
+        };
+  
+        await dynamoDbClient.send(new UpdateItemCommand(updateParams));
+  
+        res.status(200).json({message: 'Subscription saved successfully!'});
+    } catch (error) {
+        console.log('ERROR subscribing', error);
+        return res.status(500).json({message: 'Internal server error'});
+    }
+});
+
+
+app.post('/payment-success', async (req, res) => {
+    try {
+        const {userId, rosesToAdd} = req.body;
+  
+        const userParams = {
+            TableName: 'users',
+            Key: {userId},
+        };
+        const userData = await dynamoDbClient.send(new GetCommand(userParams));
+  
+        if (!userData.Item) {
+            return res.status(404).json({message: 'User not found'});
+        }
+  
+        const user = userData.Item;
+        const roses = user.roses;
+  
+        const newRoses = Number(roses) + Number(rosesToAdd);
+  
+        const updatedRoseParams = {
+            TableName: 'users',
+            Key: {userId},
+            UpdateExpression: 'SET roses = :newRoses',
+            ExpressionAttributeValues: {
+                ':newRoses': newRoses,
+            },
+        };
+  
+        await dynamoDbClient.send(new UpdateCommand(updatedRoseParams));
+  
+        const paymentId = crypto.randomUUID();
+        const paymentParams = {
+            TableName: 'payments',
+            Item: {
+                paymentId: {S: paymentId},
+                userId: {S: userId},
+                rosesPurchased: {N: rosesToAdd},
+            },
+        };
+  
+        await dynamoDbClient.send(new PutItemCommand(paymentParams));
+  
+        return res
+            .status(200)
+            .json({message: 'Payment successfull and roses updated'});
+    } catch (error) {
+        console.log('Error', error);
+        return res.status(500).json({message: 'Interval server error'});
+    }
+});
+  
+
+app.post('/send-rose', authenticateToken, async (req, res) => {
+    const {userId, likedUserId, image, comment = null, type, prompt} = req.body;
+  
+    if (req.user.userId !== userId) {
+        return res.status(403).json({message: 'Unauthorized action'});
+    }
+  
+    if (!userId) {
+        return res.status(400).json({message: 'Missing req parameters'});
+    }
+  
+    try {
+        const userParams = {
+            TableName: 'users',
+            Key: {userId},
+        };
+  
+        const userData = await dynamoDbClient.send(new GetCommand(userParams));
+  
+        if (!userData.Item) {
+            return res.status(404).json({message: 'User not found'});
+        }
+  
+        const user = userData.Item;
+  
+        const rosesRemaining = user?.roses;
+  
+        if (rosesRemaining <= 0) {
+            return res.status(403).json({message: 'No roses remaining to send'});
+        }
+  
+        const newRosesCount = rosesRemaining - 1;
+  
+        const decrementRosesParams = {
+            TableName: 'users',
+            Key: {userId},
+            UpdateExpression: 'SET roses = :newRoses',
+            ExpressionAttributeValues: {
+                ':newRoses': {N: newRosesCount},
+            },
+        };
+  
+        const category = 'Rose';
+  
+        await dynamoDbClient.send(new UpdateCommand(decrementRosesParams));
+  
+        let newLike = {userId, type, category};
+  
+        if (type === 'image') {
+            if (!image) {
+                return res
+                    .status(400)
+                    .json({message: 'Image URL is required for type "image"'});
+            }
+            newLike.image = image;
+        } 
+        else if (type === 'prompt') {
+            if (!prompt || !prompt.question || !prompt.answer) {
+                return res.status(400).json({
+                    message: 'Prompt question and answer are required for type "prompt"',
+                });
+            }
+            newLike.prompt = prompt;
+        }
+  
+        if (comment) {
+            newLike.comment = comment;
+        }
+  
+        // Step 1: Update the liked user's 'receivedLikes' array
+        const updateReceivedLikesParams = {
+            TableName: 'users',
+            Key: {userId: likedUserId}, // Key for the liked user
+            UpdateExpression:
+                'SET receivedLikes = list_append(if_not_exists(receivedLikes, :empty_list), :newLike)',
+            ExpressionAttributeValues: {
+                ':newLike': [newLike],
+                ':empty_list': [],
+            },
+            ReturnValues: 'UPDATED_NEW',
+        };
+  
+        await dynamoDbClient.send(new UpdateCommand(updateReceivedLikesParams));
+  
+        // Step 2: Update the current user's 'likedProfiles' array
+        const updateLikedProfilesParams = {
+            TableName: 'users',
+            Key: {userId}, // Key for the current user
+            UpdateExpression:
+                'SET likedProfiles = list_append(if_not_exists(likedProfiles, :empty_list), :likedUserId)',
+            ExpressionAttributeValues: {
+                ':likedUserId': [{likedUserId}],
+                ':empty_list': [],
+            },
+            ReturnValues: 'UPDATED_NEW',
+        };
+  
+        await dynamoDbClient.send(new UpdateCommand(updateLikedProfilesParams));
+  
+        res.status(200).json({message: 'Rose sent successfully'});
+    } catch (error) {
+        console.log('Error', error);
+        return res.status(500).json({message: 'Interval server error'});
+    }
+});
   
 
 
