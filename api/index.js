@@ -419,16 +419,59 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
   });
 
 
-
-
-
-
-app.get('/received-likes/:userId', authenticateToken, (req, res) => {
+app.get('/received-likes/:userId', authenticateToken, async (req, res) => {
+    const {userId} = req.params;
+  
+    console.log('User', userId);
+  
     try {
-        console.log('GET /received-likes/:userId api endpoint');
-    } catch (error) {
-        console.log('Error ', error);
-    }
+        const params = {
+            TableName: 'users',
+            Key: {userId: userId},
+            ProjectionExpression: 'receivedLikes',
+        };
+  
+        const data = await dynamoDbClient.send(new GetCommand(params));
+        console.log('User', data);
+  
+        if (!data.Item) {
+            return res.status(404).json({message: 'User not found'});
+        }
+  
+        const receivedLikes = data?.Item?.receivedLikes || [];
+  
+        const enrichedLikes = await Promise.all(
+            receivedLikes.map(async like => {
+                const userParams = {
+                    TableName: 'users',
+                    Key: {userId: like.userId},
+                    ProjectionExpression: 'userId, firstName, imageUrls, prompts',
+                };
+  
+                const userData = await dynamoDbClient.send(new GetCommand(userParams));
+                console.log('User data', userData);
+  
+                const user = userData?.Item
+                    ? {
+                        userId: userData.Item.userId,
+                        firstName: userData.Item.firstName,
+                        imageUrls: userData.Item.imageUrls || null,
+                        prompts: userData.Item.prompts,
+                    }
+                    : {userId: like.userId, firstName: null, imageUrl: null};
+  
+                return {...like, userId: user};
+            }),
+        
+        );
+  
+        console.log('Encriches', enrichedLikes);
+  
+        res.status(200).json({receivedLikes: enrichedLikes});
+        } catch (error) {
+            console.log('Error getting the likes');
+            res.status(500).json({message: 'Internal server error'});
+        }
 });
 
 app.post('/login', (req, res) => {
