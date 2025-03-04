@@ -48,6 +48,7 @@ const cognitoClient = new CognitoIdentityProviderClient({region: 'us-east-2'});
 
 const server = http.createServer(app);
 
+
 app.post('/register', async (req, res) => {
     try {
         const userData = req.body;
@@ -100,6 +101,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
+
 app.post('/sendOtp', async (req, res) => {
     const {email, password} = req.body;
     console.log('email', email);
@@ -126,6 +128,7 @@ app.post('/sendOtp', async (req, res) => {
     }
 });
 
+
 app.post('/resendOtp', async (req, res) => {
     const {email} = req.body;
 
@@ -144,6 +147,7 @@ app.post('/resendOtp', async (req, res) => {
     }
 });
 
+
 app.post('/confirmSignup', async (req, res) => {
     const {email, otpCode} = req.body;
 
@@ -161,6 +165,7 @@ app.post('/confirmSignup', async (req, res) => {
         console.log('Error confirming Sign Up', error);
     }
 });
+
 
 app.get('/matches', async (req, res) => {
     const {userId} = req.query
@@ -243,6 +248,7 @@ app.get('/matches', async (req, res) => {
     }
 });
 
+
 app.get('/user_info', async (req, res) => {
     const {userId} = req.query;
 
@@ -273,6 +279,7 @@ app.get('/user_info', async (req, res) => {
     }
 });
 
+
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
 
@@ -295,6 +302,7 @@ const authenticateToken = (req, res, next) => {
         next();
     });   
 };
+
 
 app.post('/like-profile', authenticateToken, async (req, res) => {
     const {userId, likedUserId, image, comment = null, type, prompt} = req.body;
@@ -418,6 +426,7 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
     }
   });
 
+
 app.get('/received-likes/:userId', authenticateToken, async (req, res) => {
     const {userId} = req.params;
   
@@ -473,6 +482,7 @@ app.get('/received-likes/:userId', authenticateToken, async (req, res) => {
         }
 });
 
+
 app.post('/login', async (req, res) => {
     const {email, password} = req.body;
   
@@ -525,6 +535,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+
 async function getIndexToRemove(selectedUserId, currentUserId) {
     const result = await docClient.send(
         new GetCommand({
@@ -540,12 +551,45 @@ async function getIndexToRemove(selectedUserId, currentUserId) {
     );
   }
 
-app.get('/get-matches/:userId', authenticateToken, (req, res) => {
+
+app.get('/get-matches/:userId', authenticateToken, async (req, res) => {
     try {
-        console.log('GET /get-matches api endpoint');
+        const {userId} = req.params;
+  
+        const userResult = await docClient.send(
+            new GetCommand({
+                TableName: 'users',
+                Key: {userId},
+                ProjectionExpression: 'matches',
+            }),
+        );
+  
+        const matches = userResult?.Item?.matches || [];
+  
+        if (!matches.length) {
+            return res.status(200).json({matches: []});
+        }
+  
+        const batchGetParams = {
+            RequestItems: {
+                users: {
+                    Keys: matches.map(matchId => ({userId: matchId})),
+                    ProjectionExpression: 'userId, firstName, imageUrls, prompts',
+                },
+            },
+        };
+  
+        const matchResult = await docClient.send(
+            new BatchGetCommand(batchGetParams),
+        );
+  
+        const matchedUsers = matchResult?.Responses?.users || [];
+  
+        res.status(200).json({matches: matchedUsers});
     } catch (error) {
-        console.log('Error ', error);
+             console.log('Error getting matches', error);
     }
 });
+  
 
 
