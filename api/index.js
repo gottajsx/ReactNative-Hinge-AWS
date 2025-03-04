@@ -48,11 +48,55 @@ const cognitoClient = new CognitoIdentityProviderClient({region: 'us-east-2'});
 
 const server = http.createServer(app);
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
     try {
-        console.log('POST /register api endpoint');
+        const userData = req.body;
+        console.log('Data', userData);
+
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+        const userId = crypto.randomUUID();
+
+        const newUser = {
+            userId,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            password: hashedPassword,
+            gender: userData.gender,
+            dateOfBirth: userData.dateOfBirth,
+            type: userData.type,
+            location: userData.location,
+            hometown: userData.hometown,
+            workPlace: userData.workPlace,
+            jobTitle: userData.jobTitle,
+            datingPreferences: userData.datingPreferences || [],
+            lookingFor: userData.lookingFor,
+            imageUrls: userData.imageUrls,
+            prompts: userData.prompts,
+            likes: 2,
+            roses: 1,
+            likedProfiles: [],
+            receivedLikes: [],
+            matches: [],
+            blockedUsers: [],
+        };
+
+        const params = {
+            TableName: 'usercollection',
+            Item: newUser,
+        };
+
+        await docClient.send(new PutCommand(params));
+
+        const secretKey =
+            '582e6b12ec6da3125121e9be07d00f63495ace020ec9079c30abeebd329986c5c35548b068ddb4b187391a5490c880137c1528c76ce2feacc5ad781a742e2de0'; // Use a better key management
+        const token = jwt.sign({userId: newUser.userId}, secretKey);
+
+        res.status(200).json({token})
     } catch (error) {
-        console.log('Error ', error);
+        console.log('Error creating user', error);
+        res.status(500).json({error: 'Internal server error'});
     }
 });
 
