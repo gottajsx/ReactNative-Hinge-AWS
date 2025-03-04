@@ -144,11 +144,21 @@ app.post('/resendOtp', async (req, res) => {
     }
 });
 
-app.post('/confirmSignup', (req, res) => {
+app.post('/confirmSignup', async (req, res) => {
+    const {email, otpCode} = req.body;
+
+    const confirmParams = {
+        ClientId: '',
+        Username: email,
+        ConfirmationCode: otpCode,
+    }
     try {
-        console.log('POST /confirmSignup api endpoint');
+        const command = new ConfirmSignUpCommand(confirmParams);
+        await cognitoClient.send(command);
+
+        res.status(200).json({message: 'Email verified successfully!'});
     } catch (error) {
-        console.log('Error ', error);
+        console.log('Error confirming Sign Up', error);
     }
 });
 
