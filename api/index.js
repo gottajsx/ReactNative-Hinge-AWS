@@ -243,11 +243,33 @@ app.get('/matches', async (req, res) => {
     }
 });
 
-app.get('/user_info', (req, res) => {
+app.get('/user_info', async (req, res) => {
+    const {userId} = req.query;
+
+    console.log('User ID', userId);
+
+    if (!userId) {
+        return res.status(400).json({message: 'User id is required'});
+    }
+
     try {
-        console.log('GET /user_info api endpoint');
+        const params = {
+            TableName: 'users',
+            Key: {userId},
+        };
+        const command = new GetCommand(params);
+        const result = await dynamoDbClient.send(command);
+
+        if (!result.Item) {
+            return res.status(404).json({message: 'User not found'});
+        }
+
+        console.log('res', result);
+
+        res.status(200).json({user: result.Item});
     } catch (error) {
-        console.log('Error ', error);
+        console.log('Error fetching user details', error);
+        res.status(500).json({message: 'Internal server error'});
     }
 });
 
