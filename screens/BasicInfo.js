@@ -6,12 +6,13 @@ import {
     Platform,
     Pressable,
   } from 'react-native';
-  import React from 'react';
-  import LottieView from 'lottie-react-native';
-  import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import LottieView from 'lottie-react-native';
+import {useNavigation} from '@react-navigation/native';
 
-  const BasicInfo = () => {
+const BasicInfo = () => {
     const navigation = useNavigation();
+    
     return (
         <SafeAreaView
             style={{
@@ -75,6 +76,6 @@ import {
     );
   };
   
-  export default BasicInfo;
+export default BasicInfo;
   
-  const styles = StyleSheet.create({});
+const styles = StyleSheet.create({});
