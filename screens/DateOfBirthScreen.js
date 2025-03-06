@@ -7,7 +7,7 @@ import {
     Image,
     TouchableOpacity,
     TextInput,
-  } from 'react-native';
+} from 'react-native';
 import React, {useRef, useState,useEffect} from 'react';
 import React, {useRef, useState,useEffect} from 'react';
 import Fontisto from '@expo/vector-icons/Fontisto';
