@@ -1,244 +1,181 @@
 import {
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
     StyleSheet,
     Text,
+    TextInput,
     View,
-    ScrollView,
-    Image,
-    Pressable,
   } from 'react-native';
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useLayoutEffect} from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {AuthContext} from '../AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import {BASE_URL} from '../urls/url';
-import LottieView from 'lottie-react-native';
-import UserChat from '../components/UserChat';
+import {useSocketContext} from '../SocketContext';
   
-const ChatScreen = () => {
-    const [matches, setMatches] = useState([]);
-    const {userId, setUserId} = useContext(AuthContext);
-    const [isLoading, setIsLoading] = useState(true);
-  
-    const fetchMatches = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const response = await axios.get(`${BASE_URL}/get-matches/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+const ChatRoom = () => {
+    const navigation = useNavigation();
+    const route = useRoute();
+    const [message, setMessage] = useState('');
+    const {userId} = useContext(AuthContext);
+    const [messages, setMessages] = useState([]);
+    const {socket} = useSocketContext();
+    useLayoutEffect(() => {
+        return navigation.setOptions({
+            headerTitle: '',
+            headerLeft: () => (
+                <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+                    <Ionicons name="arrow-back" size={24} color="black" />
+                    <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+                        {route?.params?.name}
+                    </Text>
+                </View>
+            ),
+            headerRight: () => (
+            <Ionicons name="videocam-outline" size={24} color="black" />
+            ),
         });
+    }, []);
+    const sendMessage = async (senderId, receiverId) => {
+        try {
+            setMessage('');
   
-        setMatches(response.data.matches);
+            await axios.post(`${BASE_URL}/sendMessage`, {
+                senderId,
+                receiverId,
+                message,
+            });
+  
+            socket.emit('sendMessage', {senderId, receiverId, message});
+  
+            setTimeout(() => {
+                fetchMessages();
+            }, 100);
         } catch (error) {
             console.log('Error', error);
-        } finally {
-            setIsLoading(false);
+        }
+    };
+    useEffect(() => {
+        fetchMessages();
+    }, []);
+    const fetchMessages = async () => {
+        try {
+            const senderId = userId;
+            const receiverId = route?.params?.receiverId;
+  
+            const response = await axios.get(`${BASE_URL}/messages`, {
+                params: {senderId, receiverId},
+            });
+  
+            setMessages(response.data);
+        } catch (error) {
+            console.log('Error', error);
         }
     };
   
-    useEffect(() => {
-        if (userId) {
-            fetchMatches();
-        }
-    }, [userId]);
+    const listenMessages = () => {
+        const {socket} = useSocketContext();
   
-    const [categorizedChats, setCategorizedChats] = useState({
-        yourTurn: [],
-        theirTurn: [],
-    });
-  
-    const fetchAndCategorizeChats = async () => {
-        const yourTurn = [];
-        const theirTurn = [];
-  
-        await Promise.all(
-            matches?.map(async item => {
-                try {
-                    const response = await axios.get(`${BASE_URL}/messages`, {
-                        params: {senderId: userId, receiverId: item?.userId},
-                    });
-  
-                    const messages = response.data;
-                    const lastMessage = messages[messages.length - 1];
-  
-                    if (lastMessage?.senderId == userId) {
-                        theirTurn.push({...item, lastMessage});
-                    } else {
-                        yourTurn.push({...item, lastMessage});
-                    }
-                } catch (error) {
-                    console.log('Error fetching', error);
-                }
-            }),
-        );
-        setCategorizedChats({yourTurn, theirTurn});
+        useEffect(() => {
+            socket?.on('newMessage', newMessage => {
+                newMessage.shouldShake = true;
+                setMessages([...messages, newMessage]);
+            });
+        }, [socket, messages, setMessages]);
     };
   
-    useEffect(() => {
-        fetchAndCategorizeChats();
-    }, [matches]);
-  
-    if (isLoading) {
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#F8F8F8',
-            }}>
-                <LottieView
-                    source={require('../assets/loading2.json')}
-                    style={{
-                        height: 180,
-                        width: 300,
-                        alignSelf: 'center',
-                        marginTop: 40,
-                        justifyContent: 'center',
-                    }}
-                    autoPlay
-                    loop={true}
-                    speed={0.7}
-                />
-            </View>
-      );
-    }
-  
-    console.log('Matches', matches);
-  
+    listenMessages();
+    const keyboardVerticalOffset = Platform.OS == 'ios' ? 65 : 0;
+    console.log('Messages', messages);
     return (
-        <ScrollView
-            style={{marginTop: 55}}
-            contentContainerStyle={{
-            flexGrow: 1,
-            backgroundColor: 'white',
-            justifyContent: matches?.length > 0 ? 'flex-start' : 'center',
-        }}>
-            <View>
-                <View style={{marginVertical: 12, marginHorizontal: 15}}>
-                    {matches?.length > 0 ? (
-                        <>
-                            <Text
-                                style={{fontSize: 22, fontWeight: 'bold', marginVertical: 12
-                            }}>
-                                Matches
-                            </Text>
-    
-                            {categorizedChats?.theirTurn.length > 0 && (
-                                <>
-                                    <Text
-                                        style={{
-                                            fontSize: 22,
-                                            fontWeight: 'bold',
-                                            marginVertical: 12,
-                                    }}>
-                                        Their Turn
-                                    </Text>
-                                    {categorizedChats?.theirTurn.map((item, index) => (
-                                        <UserChat key={index} item={item} userId={userId} />
-                                     ))}
-                                </>
-                            )}
-    
-                            {categorizedChats.yourTurn.length > 0 && (
-                                <>
-                                    <Text
-                                        style={{
-                                            fontSize: 22,
-                                            fontWeight: 'bold',
-                                            marginVertical: 12,
-                                    }}>
-                                        Your Turn
-                                    </Text>
-                                    {categorizedChats.yourTurn.map((item, index) => (
-                                        <UserChat key={index} userId={userId} item={item} />
-                                    ))}
-                                </>
-                            )}
-    
-                            {/* {matches?.map((item, index) => (
-                                <UserChat key={index} item={item} userId={userId} />
-                            ))} */}
-                        </>
-                    ) : (
-                            <View
-                                style={{flex: 1, justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <Image
-                                        style={{width: 100, height: 100}}
-                                        source={{
-                                            uri: 'https://cdn-icons-png.flaticon.com/128/5065/5065340.png',
-                                        }}
-                                    />
-    
-                                    <View style={{marginTop: 50}}>
-                                        <Text
-                                            style={{
-                                                fontSize: 22,
-                                                fontWeight: 'bold',
-                                                textAlign: 'center',
-                                        }}>
-                                            No Matches right now
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: 'gray',
-                                                marginTop: 10,
-                                                fontSize: 15,
-                                                textAlign: 'center',
-                                        }}>
-                                            Matches are more considered on hinge. We can help improve your
-                                            chances
-                                        </Text>
-                                    </View>
-    
-                                    <View style={{marginTop: 50}} />
-    
-                                        <Pressable
-                                            style={{
-                                                padding: 12,
-                                                borderRadius: 22,
-                                                backgroundColor: '#0a7064',
-                                                width: 250,
-                                        }}>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontWeight: '500',
-                                                    fontSize: 15,
-                                                    color: 'white',
-                                            }}>
-                                                Boost Your Profile
-                                            </Text>
-                                        </Pressable>
-    
-                                        <Pressable
-                                            style={{
-                                                padding: 12,
-                                                borderRadius: 22,
-                            
-                                                borderColor: '#E0E0E0',
-                                                borderWidth: 1,
-                                                marginTop: 15,
-                                                width: 250,
-                                        }}>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontWeight: '500',
-                                                    fontSize: 15,
-                                            }}>
-                                                Upgrage to HingeX
-                                            </Text>
-                                        </Pressable>
-                                    </View>
-                        )}
-                </View>
-            </View>
-        </ScrollView>
-    );
-  };
+        <KeyboardAvoidingView
+            keyboardVerticalOffset={keyboardVerticalOffset}
+            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+            style={{flex: 1, backgroundColor: 'white'}}>
+                <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                    {messages?.map((item, index) => {
+                        return (
+                            <Pressable
+                                style={[
+                                    item?.senderId == userId
+                                        ? {
+                                            alignSelf: 'flex-end',
+                                            backgroundColor: '#5b0d63',
+                                            padding: 10,
+                                            maxWidth: '60%',
+                                            borderRadius: 7,
+                                            margin: 10,
+                                        }
+                                        : {
+                                            alignSelf: 'flex-start',
+                                            backgroundColor: '#e1e3e3',
+                                            padding: 10,
+                                            maxWidth: '60%',
+                                            borderRadius: 7,
+                                        margin: 10,
+                                        },
+                                ]}
+                                key={index}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        textAlign: 'left',
+                                        letterSpacing: 0.3,
+                                        color: item?.senderId == userId ? 'white' : 'black',
+                                    }}
+                                >
+                                    {item?.message}
+                                </Text>
+                            </Pressable>
+                        );
+                    })}
+                </ScrollView>
   
-export default ChatScreen;
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingHorizontal: 10,
+                        paddingVertical: 10,
+                        borderTopWidth: 1,
+                        borderTopColor: '#dddddd',
+                        marginBottom: 30,
+                        gap: 12,
+                }}>
+                    <TextInput
+                        value={message}
+                        onChangeText={text => setMessage(text)}
+                        placeholderTextColor="gray"
+                        placeholder="Type your message..."
+                        style={{
+                            flex: 1,
+                            borderColor: '#dddddd',
+                            borderWidth: 1,
+                            borderRadius: 20,
+                            paddingHorizontal: 10,
+                            height: 40,
+                            fontSize: 15,
+                        }}
+                    />
+                    <Pressable
+                        onPress={() => sendMessage(userId, route?.params?.receiverId)}
+                        style={{
+                            backgroundColor: '#662d91',
+                            paddingVertical: 8,
+                            borderRadius: 20,
+                            paddingHorizontal: 12,
+                    }}>
+                        <Text style={{textAlign: 'center', color: 'white'}}>Send</Text>
+                    </Pressable>
+                </View>
+        </KeyboardAvoidingView>
+    );
+};
+  
+export default ChatRoom;
   
 const styles = StyleSheet.create({});
