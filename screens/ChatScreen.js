@@ -5,7 +5,7 @@ import {
     ScrollView,
     Image,
     Pressable,
-  } from 'react-native';
+} from 'react-native';
 import React, {useContext, useState, useEffect} from 'react';
 import {AuthContext} from '../AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';

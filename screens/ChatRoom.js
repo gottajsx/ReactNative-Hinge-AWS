@@ -7,7 +7,7 @@ import {
     Text,
     TextInput,
     View,
-  } from 'react-native';
+} from 'react-native';
 import React, {useState, useContext, useEffect, useLayoutEffect} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {AuthContext} from '../AuthContext';
