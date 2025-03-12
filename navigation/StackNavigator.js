@@ -260,24 +260,47 @@ const StackNavigator = () => {
         );
     };
 
-    const MainStack = () => {
-        return(
-            <Stack.Navigator>
-                <Stack.Screen
-                    name="Main"
-                    component={BottomTabs}
-                />
-            </Stack.Navigator>
+    function MainStack() {
+        return (
+          <Stack.Navigator>
+            <Stack.Screen
+                name="Main"
+                component={BottomTabs}
+                options={{headerShown: false}}
+            />
+            <Stack.Screen
+                name="SendLike"
+                component={SendLikeScreen}
+                options={{headerShown: false}}
+            />
+            <Stack.Screen
+                name="HandleLike"
+                component={HandleLikeScreen}
+                options={{headerShown: false}}
+            />
+            <Stack.Screen name="ChatRoom" component={ChatRoom} />
+    
+            <Stack.Screen
+                name="Subscription"
+                component={SubscriptionScreen}
+                options={{headerShown: false}}
+            />
+              <Stack.Screen
+                name="ProfileDetail"
+                component={ProfileDetailScreen}
+                options={{headerShown: false}}
+            />
+          </Stack.Navigator>
         );
-    };
-
+    }
+    
     return (
         <NavigationContainer>
-            {/* <MainStack /> */}
-            <AuthStack  />
+            {token == null || token == '' ? <AuthStack /> : <MainStack />}
         </NavigationContainer>
     );
-
 };
-
+    
 export default StackNavigator;
+    
+const styles = StyleSheet.create({});
