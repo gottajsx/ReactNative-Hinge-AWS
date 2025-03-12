@@ -9,9 +9,7 @@ import {
     Pressable,
 } from 'react-native';
 import React, { useState, useEffect} from 'react';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import FontAwesome from '@react-native-vector-icons/fontawesome';
-import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
+import { Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
   
@@ -53,7 +51,7 @@ const LookingFor = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons name="hand-heart" size={23} color="black" />
+                        <MaterialCommunityIcons name="hand-heart" size={23} color="black" />
                     </View>
                     <Image
                         style={{width: 100, height: 40}}
@@ -212,7 +210,7 @@ const LookingFor = () => {
                             alignItems: 'center',
                             gap: 8,
                     }}>
-                        <MaterialDesignIcons
+                        <MaterialCommunityIcons
                             name="checkbox-marked"
                             size={25}
                             color="#900C3F"

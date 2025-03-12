@@ -9,9 +9,7 @@ import {
     Alert,
 } from 'react-native';
 import React, { useState, useContext, useCallback } from 'react';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import Feather from '@react-native-vector-icons/feather';
-import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
+import { Feather, Ionicons, MaterialCommunityIcons,} from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
 import { TabBar, TabView } from 'react-native-tab-view';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -273,7 +271,7 @@ const ProfileScreen = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons
+                        <MaterialCommunityIcons
                             name="check-decagram-outline"
                             size={22}
                             color="black"
@@ -373,7 +371,7 @@ const ProfileScreen = () => {
                             backgroundColor: 'white',
                             flex: 1,
                     }}>
-                        <MaterialDesignIcons name="phone-outline" size={22} color="black" />
+                        <MaterialCommunityIcons name="phone-outline" size={22} color="black" />
                         <Text style={{fontSize: 17, fontWeight: '500'}}>
                             Crisis Hotlines
                         </Text>
@@ -391,7 +389,7 @@ const ProfileScreen = () => {
                             backgroundColor: 'white',
                             flex: 1,
                     }}>
-                        <MaterialDesignIcons name="help-box" size={22} color="black" />
+                        <MaterialCommunityIcons name="help-box" size={22} color="black" />
                         <Text>Help Center</Text>
                     </View>
                 </View>
@@ -449,7 +447,7 @@ const ProfileScreen = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons name="help" size={22} color="black" />
+                        <MaterialCommunityIcons name="help" size={22} color="black" />
                     </View>
                     <View>
                         <Text style={{fontSize: 15, fontWeight: '600'}}>Help Center</Text>
@@ -479,7 +477,7 @@ const ProfileScreen = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons
+                        <MaterialCommunityIcons
                             name="alarm-light-outline"
                             size={22}
                             color="black"

@@ -10,7 +10,7 @@ import {
     Easing,
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
-import Ionicons from '@react-native-vector-icons/ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';

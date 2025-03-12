@@ -9,8 +9,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import React, {useState,useEffect} from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
   
@@ -61,7 +60,7 @@ const DatingType = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons name="gender-male" size={23} color="black" />
+                        <MaterialCommunityIcons name="gender-male" size={23} color="black" />
                     </View>
                     <Image
                         style={{width: 100, height: 40}}
@@ -146,7 +145,7 @@ const DatingType = () => {
                             alignItems: 'center',
                             gap: 8,
                     }}>
-                        <MaterialDesignIcons
+                        <MaterialCommunityIcons
                             name="checkbox-marked"
                             size={25}
                             color="#900C3F"

@@ -9,9 +9,9 @@ import {
     Alert,
 } from 'react-native';
 import React, {useState} from 'react';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import {AuthContext} from '../AuthContext';
-import {useNavigation} from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import { AuthContext } from '../AuthContext';
+import { useNavigation } from '@react-navigation/native';
 import RazorpayCheckout from 'react-native-razorpay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';

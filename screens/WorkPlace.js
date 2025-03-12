@@ -9,9 +9,7 @@ import {
     SafeAreaView
 } from 'react-native'
 import React, { useState ,useEffect } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
 
@@ -53,7 +51,7 @@ const WorkPlace = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons name="briefcase-outline" size={23} color="black" />
+                        <MaterialCommunityIcons name="briefcase-outline" size={23} color="black" />
                     </View>
                     <Image
                         style={{width: 100, height: 40}}

@@ -9,7 +9,7 @@ import {
     TextInput,
 } from 'react-native';
 import React, { useRef, useState,useEffect } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
 
@@ -80,7 +80,7 @@ const DateOfBirthScreen = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons
+                        <MaterialCommunityIcons 
                             name="calendar-blank"
                             size={23}
                             color="black"

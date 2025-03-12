@@ -9,7 +9,7 @@ import {
     Image,
 } from 'react-native';
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import {useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import { saveRegistrationProgress } from '../utils/registrationUtils';
@@ -68,7 +68,7 @@ const PasswordScreen = () => {
                             justifyContent: 'center',
                             alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons name="lock" size={26} color="black" />
+                        <MaterialCommunityIcons name="lock" size={26} color="black" />
                     </View>
                     <Image
                         style={{width: 100, height: 40}}

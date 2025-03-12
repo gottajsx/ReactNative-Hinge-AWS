@@ -8,8 +8,7 @@ import {
     Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import MapView, {Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {useNavigation} from '@react-navigation/native';

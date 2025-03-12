@@ -16,8 +16,7 @@ import { AuthContext } from '../AuthContext';
 import 'core-js/stable/atob';
 import axios from 'axios';
 import { BASE_URL } from '../urls/url';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import Entypo from '@react-native-vector-icons/entypo';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
   
 const HomeScreen = () => {

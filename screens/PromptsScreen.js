@@ -9,9 +9,7 @@ import {
     Pressable,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import EvilIcons from '@react-native-vector-icons/evil-icons';
-import AntDesign from '@react-native-vector-icons/ant-design';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import { saveRegistrationProgress } from '../utils/registrationUtils';
   

@@ -9,8 +9,7 @@ import {
     View,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Ionicons from '@react-native-vector-icons/ionicons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
   

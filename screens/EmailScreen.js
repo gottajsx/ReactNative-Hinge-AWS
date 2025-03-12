@@ -9,8 +9,7 @@ import {
     TextInput,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Fontisto from '@expo/vector-icons/Fontisto';
-import { Ionicons } from '@expo/vector-icons';
+import { Fontisto, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {
     getRegistrationProgress,
