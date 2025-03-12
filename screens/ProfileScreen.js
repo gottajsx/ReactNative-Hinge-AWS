@@ -8,23 +8,22 @@ import {
     Image,
     Alert,
 } from 'react-native';
-import React, {useState, useContext, useCallback} from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import Feather from '@react-native-vector-icons/feather';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
-import {AuthContext} from '../AuthContext';
-import {TabBar, TabView} from 'react-native-tab-view';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { AuthContext } from '../AuthContext';
+import { TabBar, TabView } from 'react-native-tab-view';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
-import {BottomModal} from 'react-native-modals';
-import {SlideAnimation} from 'react-native-modals';
-import {ModalContent} from 'react-native-modals';
+import { BASE_URL } from '../urls/url';
+import { BottomModal } from 'react-native-modals';
+import { SlideAnimation } from 'react-native-modals';
+import { ModalContent } from 'react-native-modals';
 import RazorpayCheckout from 'react-native-razorpay';
   
 const ProfileScreen = () => {
     const {userId, userInfo, setUserInfo} = useContext(AuthContext);
-  
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const [plan, setPlan] = useState('');
@@ -50,16 +49,16 @@ const ProfileScreen = () => {
     const getUserDetails = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/user-info`, {
-            params: {userId},
+                params: {userId},
             });
     
             if (response.status === 200) {
-            const userData = response.data.user;
-    
-            // Only update state if the data is different
-            if (JSON.stringify(userData) !== JSON.stringify(userInfo)) {
-                setUserInfo(userData);
-            }
+                const userData = response.data.user;
+        
+                // Only update state if the data is different
+                if (JSON.stringify(userData) !== JSON.stringify(userInfo)) {
+                    setUserInfo(userData);
+                }
             }
         } catch (error) {
             console.error('Error fetching user details:', error);
@@ -152,7 +151,10 @@ const ProfileScreen = () => {
                 onPress: () => console.log('Cancel Pressed'),
                 style: 'cancel',
             },
-            {text: 'OK', onPress: () => initiatePayment()},
+            {
+                text: 'OK', 
+                onPress: () => initiatePayment()
+            },
         ]);
     };
   
@@ -161,7 +163,7 @@ const ProfileScreen = () => {
     const checkActiveSubscription = () => {
         if (!userInfo || !userInfo.subscriptions) {
             return {isActive: false, plan: null};
-      }
+        }
   
         const activePlan = userInfo.subscriptions.find(
             item => item.status == 'active',
@@ -181,8 +183,7 @@ const ProfileScreen = () => {
                     style={{height: 250, width: '100%', borderRadius: 10}}
                     source={{
                     uri: 'https://cdn.sanity.io/images/l7pj44pm/production/5f4e26a82da303138584cff340f3eff9e123cd56-1280x720.jpg',
-                    }}
-                />
+                }}/>
             </Pressable>
   
             <View
@@ -205,7 +206,7 @@ const ProfileScreen = () => {
                         backgroundColor: '#0a7064',
                         justifyContent: 'center',
                         alignItems: 'center',
-                    }}>
+                }}>
                     <Ionicons name="infinite-outline" size={22} color="white" />
                 </View>
                 <View>
@@ -406,13 +407,12 @@ const ProfileScreen = () => {
                         borderColor: '#E0E0E0',
                         borderWidth: 0.7,
                         borderRadius: 8,
-                    }}>
+                }}>
                     <Image
                         style={{width: 100, height: 100, borderRadius: 50}}
-                    source={{
-                        uri: 'https://images.hinge.co/6e7d61055e6f7783f84a1e41bc85aa3807f9ddba-1200x1094.jpg?w=1200&q=75',
-                    }}
-                />
+                        source={{
+                            uri: 'https://images.hinge.co/6e7d61055e6f7783f84a1e41bc85aa3807f9ddba-1200x1094.jpg?w=1200&q=75',
+                    }}/>
                     <Text style={{textAlign: 'center', fontSize: 19, fontWeight: 'bold'}}>
                         Safe Dating Advice
                     </Text>
@@ -431,7 +431,6 @@ const ProfileScreen = () => {
                 <View
                     style={{
                         marginVertical: 20,
-            
                         flexDirection: 'row',
                         alignItems: 'center',
                         gap: 12,
@@ -511,8 +510,7 @@ const ProfileScreen = () => {
                         style={{width: 100, height: 100, borderRadius: 50}}
                         source={{
                             uri: 'https://images.hinge.co/6e7d61055e6f7783f84a1e41bc85aa3807f9ddba-1200x1094.jpg?w=1200&q=75',
-                        }}
-                    />
+                    }}/>
         
                     <Text style={{textAlign: 'center', fontSize: 19, fontWeight: 'bold'}}>
                         Try a fresh photo
@@ -525,6 +523,7 @@ const ProfileScreen = () => {
             </View>
         </ScrollView>
     );
+
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <SafeAreaView style={{flex: 1, backgroundColor: '#F8F8F8'}}>
@@ -547,16 +546,14 @@ const ProfileScreen = () => {
                                 style={{width: 30, height: 30}}
                                 source={{
                                     uri: 'https://cdn-icons-png.flaticon.com/128/7854/7854753.png',
-                                }}
-                            />
+                            }}/>
                         </Pressable>
                         <Pressable>
                             <Image
                                 style={{width: 30, height: 30}}
                                 source={{
                                     uri: 'https://cdn-icons-png.flaticon.com/128/1827/1827737.png',
-                                }}
-                            />
+                            }}/>
                         </Pressable>
                     </View>
                 </View>
@@ -627,8 +624,7 @@ const ProfileScreen = () => {
                             activeColor="black"
                             inactiveColor="gray"
                         />
-                    )}
-                />
+                )}/>
             </SafeAreaView>
     
             <BottomModal
@@ -641,12 +637,13 @@ const ProfileScreen = () => {
                 }
                 visible={modalVisible}
                 onTouchOutside={() => setModalVisible(!modalVisible)}
-                onHardwareBackPress={() => setModalVisible(!modalVisible)}
-            >
+                onHardwareBackPress={() => setModalVisible(!modalVisible)    
+            }>
                 <ModalContent style={{width: '100%', height: 'auto'}}>
                     <View>
                         <Text
-                            style={{fontSize: 26, fontWeight: 'bold', textAlign: 'center'}}>
+                            style={{fontSize: 26, fontWeight: 'bold', textAlign: 'center'    
+                        }}>
                             Catch their eye by sending a rose
                         </Text>
                         <Text
@@ -677,7 +674,7 @@ const ProfileScreen = () => {
                                         marginRight: 20,
                                         borderRadius: 12,
                                         width: 200,
-                                        }}
+                                    }}
                                     key={index}
                                 >
                                     <Text style={{fontSize: 20, fontWeight: 'bold'}}>
@@ -688,8 +685,7 @@ const ProfileScreen = () => {
                                         style={{width: 60, height: 60, marginVertical: 15}}
                                         source={{
                                             uri: 'https://cdn-icons-png.flaticon.com/128/4006/4006798.png',
-                                        }}
-                                    />
+                                    }}/>
                 
                                     <Text style={{fontSize: 15, fontWeight: '500'}}>
                                         {item?.price}  

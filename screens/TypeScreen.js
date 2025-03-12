@@ -8,7 +8,7 @@ import {
     Pressable,
     TouchableOpacity,
 } from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, { useState,useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -18,6 +18,7 @@ import { getRegistrationProgress, saveRegistrationProgress } from '../utils/regi
 const TypeScreen = () => {
     const [type, setType] = useState('');
     const navigation = useNavigation();
+    
     useEffect(() => {
         getRegistrationProgress('Type').then(progressData => {
             if(progressData){
@@ -25,19 +26,21 @@ const TypeScreen = () => {
             }
         })
     },[])
+    
     const handleNext = () => {
         if(type.trim() != ''){
             saveRegistrationProgress('Type',{type});
         }
         navigation.navigate("Dating")
     }
+    
     return (
         <SafeAreaView
             style={{
                 paddingTop: Platform.OS === 'android' ? 35 : 0,
                 flex: 1,
                 backgroundColor: 'white',
-            }}>
+        }}>
             <View style={{marginTop: 80, marginHorizontal: 20}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View
@@ -56,8 +59,7 @@ const TypeScreen = () => {
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                        }}
-                    />
+                    }}/>
                 </View>
   
                 <Text
@@ -159,12 +161,12 @@ const TypeScreen = () => {
                 <TouchableOpacity
                     onPress={handleNext}
                     activeOpacity={0.8}
-                    style={{marginTop: 30, marginLeft: 'auto'}}
-                >
+                    style={{marginTop: 30, marginLeft: 'auto'    
+                }}>
                     <Ionicons
-                    name="chevron-forward-circle-outline"
-                    size={45}
-                    color="#581845"
+                        name="chevron-forward-circle-outline"
+                        size={45}
+                        color="#581845"
                     />
                 </TouchableOpacity>
             </View>

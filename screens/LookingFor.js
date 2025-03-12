@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     Pressable,
 } from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
@@ -18,6 +18,7 @@ import { getRegistrationProgress, saveRegistrationProgress } from '../utils/regi
 const LookingFor = () => {
     const [lookingFor, setLookingFor] = useState('');
     const navigation = useNavigation();
+    
     useEffect(() => {
         getRegistrationProgress('LookingFor').then(progressData => {
             if(progressData){
@@ -58,8 +59,7 @@ const LookingFor = () => {
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                        }}
-                    />
+                    }}/>
                 </View>
   
                 <Text
@@ -155,9 +155,7 @@ const LookingFor = () => {
                                 name="circle"
                                 size={26}
                                 color={
-                                    lookingFor == 'Short-term relationship open to long'
-                                    ? '#581845'
-                                    : '#F0F0F0'
+                                    lookingFor == 'Short-term relationship open to long' ? '#581845': '#F0F0F0'
                                 }
                             />
                         </Pressable>
@@ -175,16 +173,13 @@ const LookingFor = () => {
                         <Pressable
                             onPress={() =>
                                 setLookingFor('Short-term relationship')
-                            }>
-                                <FontAwesome
-                                    name="circle"
-                                    size={26}
-                                    color={
-                                        lookingFor == 'Short-term relationship'
-                                        ? '#581845'
-                                        : '#F0F0F0'
-                                    }
-                                />
+                        }>
+                            <FontAwesome
+                                name="circle"
+                                size={26}
+                                color={
+                                    lookingFor == 'Short-term relationship'? '#581845' : '#F0F0F0'
+                            }/>
                         </Pressable>
                     </View>
   
@@ -202,14 +197,11 @@ const LookingFor = () => {
                                 setLookingFor('Figuring out my dating goals')
                             }>
                                 <FontAwesome
-                                name="circle"
-                                size={26}
-                                color={
-                                    lookingFor == 'Figuring out my dating goals'
-                                    ? '#581845'
-                                    : '#F0F0F0'
-                                }
-                                />
+                                    name="circle"
+                                    size={26}
+                                    color={
+                                        lookingFor == 'Figuring out my dating goals' ? '#581845': '#F0F0F0'
+                                }/>
                         </Pressable>
                     </View>
   

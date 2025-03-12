@@ -7,20 +7,21 @@ import {
     Text,
     View,
   } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import LottieView from 'lottie-react-native';
-import {useNavigation} from '@react-navigation/native';
-import {getRegistrationProgress} from '../utils/registrationUtils';
+import { useNavigation } from '@react-navigation/native';
+import { getRegistrationProgress } from '../utils/registrationUtils';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
+import { BASE_URL } from '../urls/url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AuthContext} from '../AuthContext';
+import { AuthContext } from '../AuthContext';
   
 const PreFinalScreen = () => {
     const [userData, setUserData] = useState();
     const {token, setToken} = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
+    
     useEffect(() => {
         getAllUserData();
     }, []);
@@ -107,10 +108,11 @@ const PreFinalScreen = () => {
             clearAllScreenData();
         } catch (error) {
             console.log('Error', error);
-        }finally{
+        } finally {
             setLoading(false);
         }
     };
+
     return (
         <SafeAreaView
             style={{
@@ -160,19 +162,20 @@ const PreFinalScreen = () => {
             <Pressable
                 onPress={registerUser}
                 style={{marginTop: 'auto', backgroundColor: '#900C3F', padding: 15}}>
-                {loading ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text
-                    style={{
-                        textAlign: 'center',
-                        color: 'white',
-                        fontWeight: '600',
-                        fontSize: 15,
-                }}>
-                    Finish Registering
-                </Text>
-            )}
+                {loading ? 
+                    (
+                        <ActivityIndicator size="small" color="white" />
+                    ) : (
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: 'white',
+                                    fontWeight: '600',
+                                    fontSize: 15,
+                            }}>
+                                Finish Registering
+                            </Text>
+                    )}
             </Pressable>
         </SafeAreaView>
     );

@@ -8,10 +8,10 @@ import {
     Image,
     TextInput,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { Ionicons } from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
     getRegistrationProgress,
     saveRegistrationProgress,
@@ -20,6 +20,7 @@ import {
 const EmailScreen = () => {
     const [email, setEmail] = useState('');
     const navigation = useNavigation();
+    
     useEffect(() => {
         getRegistrationProgress('Email').then(progressData => {
             if (progressData) {
@@ -27,6 +28,7 @@ const EmailScreen = () => {
             }
         });
     }, []);
+    
     const handleNext = () => {
         if (email.trim() !== '') {
             saveRegistrationProgress('Email', {email});
@@ -35,6 +37,7 @@ const EmailScreen = () => {
             email: email,
         });
     };
+    
     return (
         <SafeAreaView
             style={{
@@ -103,8 +106,8 @@ const EmailScreen = () => {
                 <TouchableOpacity
                     onPress={handleNext}
                     activeOpacity={0.8}
-                    style={{marginTop: 30, marginLeft: 'auto'}}
-                >
+                    style={{marginTop: 30, marginLeft: 'auto'    
+                }}>
                     <Ionicons
                         name="chevron-forward-circle-outline"
                         size={45}

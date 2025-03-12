@@ -8,29 +8,32 @@ import {
     Image,
     Pressable,
 } from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
   
 const GenderScreen = () => {
     const [gender, setGender] = useState('');
     const navigation = useNavigation();  
+
     useEffect(() => {
         getRegistrationProgress('Gender').then(progressData => {
             if(progressData){
             setGender(progressData.gender || '');
             }
         })
-    },[]) 
+    },[])
+
     const handleNext = () => {
         if(gender.trim() != ''){
             saveRegistrationProgress('Gender',{gender});
         }
         navigation.navigate("Type");
     }
+
     return (
         <SafeAreaView
             style={{
@@ -50,7 +53,7 @@ const GenderScreen = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}>
-                        <MaterialDesignIcons name="gender-male" size={23} color="black" />
+                        <MaterialCommunityIcons name="gender-male" size={23} color="black" />
                     </View>
                     <Image
                         style={{width: 100, height: 40}}
@@ -132,12 +135,9 @@ const GenderScreen = () => {
                             alignItems: 'center',
                             gap: 8,
                     }}>
-                        <MaterialDesignIcons name="checkbox-marked" size={25} color="#900C3F" />
+                        <MaterialCommunityIcons name="checkbox-marked" size={25} color="#900C3F" />
                         <Text style={{fontSize: 15}}>Visible on profile</Text>
                     </View>
-  
-  
-  
                 </View>
   
                 <TouchableOpacity

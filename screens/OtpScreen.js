@@ -7,8 +7,8 @@ import {
     TextInput,
     Button,
   } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { BASE_URL } from '../urls/url';
   
@@ -72,7 +72,7 @@ const OtpScreen = () => {
         setOtp(['', '', '', '', '', '']);
   
         try{
-            const response = await axios.post(`${BASE_URL}/resendOtp`,{
+            const response = await axios.post(`${BASE_URL}/resendOtp`, {
                 email:email,
             });
   

@@ -11,7 +11,6 @@ import {
 import React, {useState,useEffect} from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
   
@@ -23,10 +22,11 @@ const DatingType = () => {
             setDatingPreferences(
                 datingPreferences.filter(selectedOption => selectedOption !== option),
             );
-        }else{
+        } else {
             setDatingPreferences([...datingPreferences,option]);
         }
     };
+
     useEffect(() => {
         getRegistrationProgress('Dating').then(progressData => {
             if(progressData){
@@ -34,19 +34,21 @@ const DatingType = () => {
             }
         })
     },[])
+
     const handleNext = () => {
         if(datingPreferences.length > 0){
             saveRegistrationProgress('Dating',{datingPreferences})
         }
       navigation.navigate("LookingFor");
     }
+
     return (
         <SafeAreaView
             style={{
                 paddingTop: Platform.OS === 'android' ? 35 : 0,
                 flex: 1,
                 backgroundColor: 'white',
-            }}>
+        }}>
             <View style={{marginTop: 80, marginHorizontal: 20}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View
@@ -65,8 +67,7 @@ const DatingType = () => {
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                        }}
-                    />
+                    }}/>
                 </View>
   
                 <Text
@@ -86,9 +87,9 @@ const DatingType = () => {
                 <View style={{marginTop: 30, flexDirection: 'column', gap: 12}}>
                     <View
                         style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
                     }}>
                         <Text style={{fontSize: 15, fontWeight: '500'}}>Men</Text>
                         <Pressable onPress={() => chooseOption('Men')}>

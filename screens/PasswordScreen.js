@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import { saveRegistrationProgress } from '../utils/registrationUtils';
@@ -23,6 +21,7 @@ const PasswordScreen = () => {
     const route = useRoute();
     const navigation = useNavigation();
     const email = route?.params?.email;
+    
     const handleSendOtp = async () => {
         if(!email){
             return;
@@ -40,6 +39,7 @@ const PasswordScreen = () => {
             console.log("Error sending the OTP",error)
         }
     }
+    
     const handleNext = () => {
         if(password.trim() !== ''){
             saveRegistrationProgress('Password',{password});
@@ -48,6 +48,7 @@ const PasswordScreen = () => {
   
         handleSendOtp();
     };
+    
     return (
         <SafeAreaView
             style={{
@@ -103,8 +104,7 @@ const PasswordScreen = () => {
                         paddingBottom: 10,
                         fontFamily: 'GeezaPro-Bold',
                         fontSize: password ? 22 : 22,
-                    }}
-                />
+                }}/>
   
                 <Text style={{color: 'gray', marginTop: 7, fontSize: 15}}>
                     Note: You details will be safe with us
@@ -113,8 +113,8 @@ const PasswordScreen = () => {
                 <TouchableOpacity
                     onPress={handleNext}
                     activeOpacity={0.8}
-                    style={{marginTop: 30, marginLeft: 'auto'}}
-                    >
+                    style={{marginTop: 30, marginLeft: 'auto'
+                }}>
                     <Ionicons
                         name="chevron-forward-circle-outline"
                         size={45}

@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import React, {useState,useEffect} from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getRegistrationProgress, saveRegistrationProgress } from '../utils/registrationUtils';
@@ -18,6 +17,7 @@ import { getRegistrationProgress, saveRegistrationProgress } from '../utils/regi
 const HomeTownScreen = () => {
     const [hometown, setHomeTown] = useState('');
     const navigation = useNavigation();
+    
     useEffect(() => {
         getRegistrationProgress('Hometown').then(progressData => {
             if(progressData){
@@ -25,19 +25,21 @@ const HomeTownScreen = () => {
             }
         })
     },[])
+    
     const handleNext = () => {
         if(hometown.trim() !== ''){
             saveRegistrationProgress('Hometown',{hometown});
         }
         navigation.navigate("Workplace")
     };
+
     return (
         <SafeAreaView
             style={{
                 paddingTop: Platform.OS === 'android' ? 35 : 0,
                 flex: 1,
                 backgroundColor: 'white',
-            }}>
+        }}>
             <View style={{marginTop: 80, marginHorizontal: 20}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View
@@ -56,16 +58,15 @@ const HomeTownScreen = () => {
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                        }}
-                    />
+                    }}/>
                 </View>
         
                 <Text
                     style={{
-                    fontSize: 25,
-                    fontWeight: 'bold',
-                    fontFamily: 'GeezaPro-Bold',
-                    marginTop: 15,
+                        fontSize: 25,
+                        fontWeight: 'bold',
+                        fontFamily: 'GeezaPro-Bold',
+                        marginTop: 15,
                 }}>
                     Where's your hometown?
                 </Text>
@@ -89,18 +90,19 @@ const HomeTownScreen = () => {
                 <TouchableOpacity
                     onPress={handleNext}
                     activeOpacity={0.8}
-                    style={{marginTop: 30, marginLeft: 'auto'}}>
-                        <Ionicons
+                    style={{marginTop: 30, marginLeft: 'auto'
+                }}>
+                    <Ionicons
                         name="chevron-forward-circle-outline"
                         size={45}
                         color="#581845"
-                        />
+                    />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
-  };
+};
   
-  export default HomeTownScreen;
+export default HomeTownScreen;
   
-  const styles = StyleSheet.create({});
+const styles = StyleSheet.create({});

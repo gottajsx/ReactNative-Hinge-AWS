@@ -8,7 +8,7 @@ import {
     Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-react-native-maps
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { MaterialIcons } from '@expo/vector-icons';
 import MapView, {Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -41,6 +41,7 @@ const LocationScreen = () => {
             {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
     }, []);
+    
     const fetchAddress = (latitude, longitude) => {
         fetch(
         `   https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyDfr7eubWiWHSMt_3DGir2Fcx4BN1NtoTg`,
@@ -69,7 +70,9 @@ const LocationScreen = () => {
         saveRegistrationProgress('Location',{location});
         navigation.navigate('Gender');
     };
+    
     console.log('Location', location);
+    
     return (
         <SafeAreaView
             style={{
@@ -88,15 +91,14 @@ const LocationScreen = () => {
                             borderColor: 'black',
                             justifyContent: 'center',
                             alignItems: 'center',
-                        }}>
+                    }}>
                         <MaterialIcons name="map-marker" size={23} color="black" />
                     </View>
                     <Image
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                        }}
-                    />
+                    }}/>
                 </View>
     
                 <Text

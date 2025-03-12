@@ -8,7 +8,7 @@ import {
     Pressable,
 } from 'react-native';
 import React, {useState} from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
   
 const ShowPromptsScreen = () => {
     const navigation = useNavigation();
@@ -16,6 +16,7 @@ const ShowPromptsScreen = () => {
     const [prompts, setPrompts] = useState([]);
     const [option, setOption] = useState('About me');
     const [answer, setAnswer] = useState('');
+    
     const promptss = [
         {
             id: '0',
@@ -235,13 +236,14 @@ const ShowPromptsScreen = () => {
             ],
         },
     ];
+
     return (
         <SafeAreaView
             style={{
                 paddingTop: Platform.OS === 'android' ? 35 : 0,
                 flex: 1,
                 backgroundColor: 'white',
-           }}>
+        }}>
             <ScrollView>
                 <View
                     style={{
@@ -305,8 +307,8 @@ const ShowPromptsScreen = () => {
                                                         index: route?.params?.index,
                                                     })
                                                 }
-                                                style={{marginVertical: 20}}
-                                            >
+                                                style={{marginVertical: 20
+                                            }}>
                                                 <Text
                                                     style={{
                                                         fontSize: 15,
@@ -318,8 +320,8 @@ const ShowPromptsScreen = () => {
                                             </Pressable>
                     
                                             <View
-                                                style={{borderColor: '#E0E0E0', borderWidth: 0.5}}
-                                            />
+                                                style={{borderColor: '#E0E0E0', borderWidth: 0.5
+                                            }}/>
                                         </>
                                     ))} 
                                 </View>

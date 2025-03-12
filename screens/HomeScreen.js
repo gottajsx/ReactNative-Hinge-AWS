@@ -8,14 +8,14 @@ import {
     View,
     Animated,
 } from 'react-native';
-import React, {useState, useEffect, useContext, useCallback} from 'react';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {jwtDecode} from 'jwt-decode';
-import {AuthContext} from '../AuthContext';
+import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from '../AuthContext';
 import 'core-js/stable/atob';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
+import { BASE_URL } from '../urls/url';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import Entypo from '@react-native-vector-icons/entypo';
 import LottieView from 'lottie-react-native';
@@ -198,21 +198,23 @@ const HomeScreen = () => {
         }
     };
   
-        console.log('matches', currentProfile?.type);
-        const logout = () => {
-            clearAuthToken();
-        };
-        const clearAuthToken = async () => {
-            try {
+    console.log('matches', currentProfile?.type);
+    
+    const logout = () => {
+        clearAuthToken();
+    };
+
+    const clearAuthToken = async () => {
+        try {
                 await AsyncStorage.removeItem('token');
   
                 setToken('');
             } catch (error) {
                 console.log('Error', error);
             }
-        };
+    };
   
-        if (isLoading) {
+    if (isLoading) {
         return (
             <View
                 style={{
@@ -266,7 +268,9 @@ const HomeScreen = () => {
             console.log('Error fetching user details');
         }
     };
+    
     console.log('info', userInfo);
+    
     return (
         <>
             <ScrollView contentContainerStyle={{flexGrow: 1, marginTop: 55}}>

@@ -21,19 +21,22 @@ const PromptsScreen = () => {
         {question: '', answer: ''},
         {question: '', answer: ''},
     ]);
+
     const route = useRoute();
     const navigation = useNavigation();
+    
     useEffect(() => {
         if (route?.params?.updatedPrompts) {
             setPrompts(route?.params?.updatedPrompts);
         }
     }, [route.params]);
+    
     const handleNext = () => {
         saveRegistrationProgress('Prompts',{prompts:prompts})
         navigation.navigate("PreFinal")
     }
+    
     return (
-  
         <SafeAreaView
             style={{
                 paddingTop: Platform.OS === 'android' ? 35 : 0,
@@ -58,8 +61,7 @@ const PromptsScreen = () => {
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                        }}
-                    />
+                    }}/>
                 </View>
         
                 <Text
@@ -141,8 +143,8 @@ const PromptsScreen = () => {
                 <TouchableOpacity
                     onPress={handleNext}
                     activeOpacity={0.8}
-                    style={{marginTop: 30, marginLeft: 'auto'}}
-                >
+                    style={{marginTop: 30, marginLeft: 'auto'}
+                }>
                     <Ionicons
                         name="chevron-forward-circle-outline"
                         size={45}

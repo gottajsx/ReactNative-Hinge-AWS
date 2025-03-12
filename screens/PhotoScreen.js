@@ -10,7 +10,7 @@ import {
     TextInput,
     Button,
 } from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, { useState,useEffect } from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import EvilIcons from '@react-native-vector-icons/evil-icons';
 import MaterialIcons from '@react-native-vector-icons/material-icons';
@@ -21,6 +21,7 @@ const PhotoScreen = () => {
     const [imageUrls, setImageUrls] = useState(['', '', '', '', '', '']);
     const [imageUrl, setImageUrl] = useState('');
     const navigation = useNavigation();
+    
     const handleAddImage = () => {
         const index = imageUrls?.findIndex(url => url === '');
         if (index !== -1) {
@@ -30,6 +31,7 @@ const PhotoScreen = () => {
             setImageUrl('');
         }
     };
+    
     useEffect(() => {
         getRegistrationProgress('Photos').then(progressData => {
             if(progressData){
@@ -37,29 +39,32 @@ const PhotoScreen = () => {
             }
         })
     },[])
+    
     const handleNext = () => {
         saveRegistrationProgress('Photos',{imageUrls});
         navigation.navigate("Prompts");
     }
+    
     console.log('images', imageUrls);
+    
     return (
         <SafeAreaView
             style={{
                 paddingTop: Platform.OS === 'android' ? 35 : 0,
                 flex: 1,
                 backgroundColor: 'white',
-            }}>
+        }}>
             <View style={{marginTop: 80, marginHorizontal: 20}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View
-                    style={{
-                            width: 44,
-                            height: 44,
-                            borderRadius: 22,
-                            borderWidth: 2,
-                            borderColor: 'black',
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                        style={{
+                                width: 44,
+                                height: 44,
+                                borderRadius: 22,
+                                borderWidth: 2,
+                                borderColor: 'black',
+                                justifyContent: 'center',
+                                alignItems: 'center',
                     }}>
                         <MaterialIcons name="photo-camera-back" size={23} color="black" />
                     </View>
@@ -67,8 +72,7 @@ const PhotoScreen = () => {
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                    }}
-                    />
+                    }}/>
                 </View>
     
                 <Text
@@ -105,8 +109,7 @@ const PhotoScreen = () => {
                                             height: '100%',
                                             borderRadius: 10,
                                             resizeMode: 'cover',
-                                        }}
-                                    />
+                                    }}/>
                                 ) : (
                                         <EvilIcons name="image" size={22} color="black" />
                                 )}
@@ -139,8 +142,7 @@ const PhotoScreen = () => {
                                             height: '100%',
                                             borderRadius: 10,
                                             resizeMode: 'cover',
-                                        }}
-                                    />
+                                    }}/>
                                 ) : (
                                         <EvilIcons name="image" size={22} color="black" />
                                  )}
@@ -195,8 +197,8 @@ const PhotoScreen = () => {
                 <TouchableOpacity
                     onPress={handleNext}
                     activeOpacity={0.8}
-                    style={{marginTop: 30, marginLeft: 'auto'}}
-                >
+                    style={{marginTop: 30, marginLeft: 'auto'    
+                }}>
                     <Ionicons
                         name="chevron-forward-circle-outline"
                         size={45}

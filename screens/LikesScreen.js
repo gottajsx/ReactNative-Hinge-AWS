@@ -10,16 +10,15 @@ import {
     Dimensions,
 } from 'react-native';
 import React, {useState, useContext, useCallback, useEffect} from 'react';
-import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
     useFocusEffect,
     useNavigation,
-    useRoute,
 } from '@react-navigation/native';
-import {AuthContext} from '../AuthContext';
+import { AuthContext } from '../AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
+import { BASE_URL } from '../urls/url';
 import LottieView from 'lottie-react-native';
 
 const LikesScreen = () => {
@@ -28,6 +27,7 @@ const LikesScreen = () => {
     const {userId} = useContext(AuthContext);
     const [likes, setLikes] = useState([]);
     const [userInfo, setUserInfo] = useState(null);
+    
     useFocusEffect(
         useCallback(() => {
             if (userId) {
@@ -35,6 +35,7 @@ const LikesScreen = () => {
             }
         }, [userId]),
     );
+    
     const fetchReceivedLikes = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -89,7 +90,7 @@ const LikesScreen = () => {
 
     const checkActive = () => {
         if (!userInfo) {
-        return;
+            return;
         }
         return (
             userInfo.subscriptions?.some(item => item.status == 'active') || false
@@ -131,9 +132,7 @@ const LikesScreen = () => {
                         <View
                             style={{
                                 alignItems: 'flex-start',
-
                                 paddingVertical: 10,
-
                                 borderRadius: 5,
                                 marginBottom: 8,
                                 alignSelf: 'flex-start',
@@ -192,7 +191,9 @@ const LikesScreen = () => {
             </View>
         );
     }
+
     console.log('Likes', likes);
+    
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
             <ScrollView
@@ -250,7 +251,7 @@ const LikesScreen = () => {
                                 borderRadius: 24,
                         }}>
                             <Text style={{color: '#404040', fontWeight: '500'}}>Recent</Text>
-                            <MaterialDesignIcons name="chevron-down" size={22} color="gray" />
+                            <MaterialCommunityIcons name="chevron-down" size={22} color="gray" />
                         </Pressable>
 
                         <View style={{marginTop: 15}}>
@@ -417,19 +418,19 @@ const LikesScreen = () => {
                     </>
                 ) : (
                         <View
-                            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-                        >
+                            style={{flex: 1, justifyContent: 'center', alignItems: 'center'
+                            
+                        }}>
                             <Image
                                 style={{width: 100, height: 100}}
                                 source={{
                                     uri: 'https://cdn-icons-png.flaticon.com/128/38/38384.png',
-                                }}
-                            />
+                            }}/>
 
                             <View>
                                 <Text
-                                    style={{fontSize: 22, fontWeight: 'bold', textAlign: 'center'}}
-                                >
+                                    style={{fontSize: 22, fontWeight: 'bold', textAlign: 'center'
+                                }}>
                                     You're new, no likes yet
                                 </Text>
 
@@ -475,8 +476,8 @@ const LikesScreen = () => {
                                     width: 250,
                             }}>
                                 <Text
-                                    style={{textAlign: 'center', fontWeight: '500', fontSize: 15}}
-                                >
+                                    style={{textAlign: 'center', fontWeight: '500', fontSize: 15
+                                }}>
                                     Upgrage to HingeX
                                 </Text>
                             </Pressable>

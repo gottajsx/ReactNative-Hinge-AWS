@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
   
 const WritePrompt = () => {
     const route = useRoute();
@@ -17,11 +17,13 @@ const WritePrompt = () => {
     const question = route?.params?.question;
     const {index, prompts, setPrompts} = route.params;
     const [answer, setAnswer] = useState('');
+    
     const handleDone = () => {
         const updatedPrompts = [...prompts];
         updatedPrompts[index] = {question,answer};
         navigation.replace("Prompts",{updatedPrompts});
     }
+    
     return (
         <SafeAreaView
             style={{
@@ -61,7 +63,6 @@ const WritePrompt = () => {
             <View style={{padding: 12}}>
                 <View style={{backgroundColor: 'white', padding: 15, borderRadius: 5}}>
                     <Text>{question}</Text>
-  
                 </View>
   
                 <View

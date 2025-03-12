@@ -8,16 +8,16 @@ import {
     Alert,
 } from 'react-native';
 import React from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
+import { BASE_URL } from '../urls/url';
   
 const HandleLikeScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
+    
     const createMatch = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -44,6 +44,7 @@ const HandleLikeScreen = () => {
             console.log('Error', error);
         }
     };
+
     const match = () => {
         Alert.alert('Accept Request?', `Match with ${route?.params?.name}`, [
             {
@@ -54,16 +55,17 @@ const HandleLikeScreen = () => {
             {text: 'OK', onPress: () => createMatch()},
         ]);
     };
+
     return (
          <>
             <ScrollView
-                style={{flex: 1, backgroundColor: 'white', marginTop: 55, padding: 12}}
-            >
+                style={{flex: 1, backgroundColor: 'white', marginTop: 55, padding: 12    
+            }}>
                 <View
                     style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                 }}>
                     <Text style={{fontSize: 15, fontWeight: '500'}}>
                         All {route?.params?.likes}
@@ -90,8 +92,8 @@ const HandleLikeScreen = () => {
                                     borderRadius: 7,
                                     resizeMode: 'cover',
                                 }}
-                                source={{uri: route?.params?.image}}
-                            />
+                                source={{uri: route?.params?.image
+                            }}/>
                         )}
                 </View>
   
@@ -105,8 +107,7 @@ const HandleLikeScreen = () => {
                         marginBottom: 8,
                         alignSelf: 'flex-start',
                         bottom: 20,
-                    }}
-                >
+                }}>
                     {route?.params?.comment ? (
                          <Text></Text>
                     ) : route?.params?.type == 'prompt' ? (
@@ -146,9 +147,9 @@ const HandleLikeScreen = () => {
                         </View>
                         <View
                             style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            gap: 15,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                gap: 15,
                         }}>
                             <Entypo name="dots-three-horizontal" size={22} color="black" />
                         </View>
@@ -267,9 +268,7 @@ const HandleLikeScreen = () => {
                                         }}
                                         source={{
                                             uri: item,
-                                        }}
-                                    />
-    
+                                }}/>
                                     <View
                                         style={{
                                             position: 'absolute',

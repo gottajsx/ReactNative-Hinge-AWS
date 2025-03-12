@@ -11,6 +11,7 @@ const SubscriptionScreen = () => {
         {key: 'hingeplus', title: 'Hinge+'},
         {key: 'hingeX', title: 'HingeX'},
     ]);
+    
     const renderScene = ({route}) => {
         switch (route.key) {
             case 'hingeplus':
@@ -19,9 +20,10 @@ const SubscriptionScreen = () => {
                 return <HingeX />;
             default:
                 return null;
-    }
-  };
-  return (
+        }
+    };
+    
+    return (
         <ScrollView contentContainerStyle={{flexGrow:1}}>
             <SafeAreaView style={{flex: 1, backgroundColor: '#F8F8F8'}}>
                 <TabView
@@ -42,8 +44,7 @@ const SubscriptionScreen = () => {
                         activeColor={index === 1 ? 'white' : '#9f4ec2'}
                         inactiveColor={index === 1 ? '#C0C0C0' : '#202020'}
                         />
-                    )}
-                />
+                )}/>
             </SafeAreaView>
         </ScrollView>
      );

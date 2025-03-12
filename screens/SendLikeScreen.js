@@ -9,14 +9,14 @@ import {
     Animated,
     Easing,
 } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
+import { BASE_URL } from '../urls/url';
 import LottieView from 'lottie-react-native';
-import {AuthContext} from '../AuthContext';
+import { AuthContext } from '../AuthContext';
   
 const SendLikeScreen = () => {
     const navigation = useNavigation();
@@ -29,6 +29,7 @@ const SendLikeScreen = () => {
     const animationValue = new Animated.Value(0);
     const scale = useState(new Animated.Value(1))[0];
     const {userInfo} = useContext(AuthContext);
+    
     const likeProfile = async () => {
         setProfileVisible(prev => !prev);
     
@@ -82,10 +83,10 @@ const SendLikeScreen = () => {
             }).start();
         } else {
             Animated.timing(scale, {
-            toValue: 1,
-            duration: 600,
-            easing: Easing.ease,
-            useNativeDriver: true,
+                toValue: 1,
+                duration: 600,
+                easing: Easing.ease,
+                useNativeDriver: true,
             }).start();
         }
     }, [isAnimating]);
@@ -205,43 +206,42 @@ const SendLikeScreen = () => {
                                             marginTop: 40,
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                        }}
-                                    />
+                                    }}/>
                                 </Animated.View>
                             )}
                         </View>
                     ) : (
-                        <View
-                            style={{
-                                backgroundColor: 'white',
-                                padding: 20,
-                                borderRadius: 10,
-                                shadowColor: '#000',
-                                shadowOffset: {width: 0, height: 2},
-                                shadowOpacity: 0.2,
-                                shadowRadius: 5,
-                                width: '100%',
-                                justifyContent: 'center',
-                                marginTop: 10,
-                                height: 200,
-                        }}>
-                            <Text
+                            <View
                                 style={{
-                                    fontSize: 18,
-                                    fontWeight: '600',
-                                    color: '#333',
-                                    textAlign: 'left',
-                                    marginBottom: 10,
+                                    backgroundColor: 'white',
+                                    padding: 20,
+                                    borderRadius: 10,
+                                    shadowColor: '#000',
+                                    shadowOffset: {width: 0, height: 2},
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 5,
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    marginTop: 10,
+                                    height: 200,
                             }}>
-                                {route?.params?.prompt?.question}
-                            </Text>
-                            <Text
-                                numberOfLines={3}
-                                style={{fontSize: 22, fontWeight: 'bold', textAlign: 'left'}}
-                            >
-                                {route?.params?.prompt?.answer}
-                            </Text>
-                        </View>
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        fontWeight: '600',
+                                        color: '#333',
+                                        textAlign: 'left',
+                                        marginBottom: 10,
+                                }}>
+                                    {route?.params?.prompt?.question}
+                                </Text>
+                                <Text
+                                    numberOfLines={3}
+                                    style={{fontSize: 22, fontWeight: 'bold', textAlign: 'left'}}
+                                >
+                                    {route?.params?.prompt?.answer}
+                                </Text>
+                            </View>
                     )}
         
                     <TextInput
@@ -254,8 +254,7 @@ const SendLikeScreen = () => {
                             borderRadius: 8,
                             marginTop: 14,
                             fontSize: comment ? 17 : 17,
-                        }}
-                    />
+                    }}/>
         
                     <View
                         style={{
@@ -290,8 +289,8 @@ const SendLikeScreen = () => {
                                     flex: 1,
                         }}>
                             <Text
-                                style={{textAlign: 'center', fontWeight: 'bold', fontSize: 15}}
-                            >
+                                style={{textAlign: 'center', fontWeight: 'bold', fontSize: 15    
+                            }}>
                                 Send Like
                             </Text>
                         </Pressable>
@@ -315,8 +314,7 @@ const SendLikeScreen = () => {
                             style={{width: 70, height: 60}}
                             source={{
                                 uri: 'https://cdn-icons-png.flaticon.com/128/2724/2724657.png',
-                            }}
-                        />
+                        }}/>
                     </Animated.View>
                 </View>
             )}

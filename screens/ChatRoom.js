@@ -23,6 +23,7 @@ const ChatRoom = () => {
     const {userId} = useContext(AuthContext);
     const [messages, setMessages] = useState([]);
     const {socket} = useSocketContext();
+    
     useLayoutEffect(() => {
         return navigation.setOptions({
             headerTitle: '',
@@ -35,10 +36,11 @@ const ChatRoom = () => {
                 </View>
             ),
             headerRight: () => (
-            <Ionicons name="videocam-outline" size={24} color="black" />
+                <Ionicons name="videocam-outline" size={24} color="black" />
             ),
         });
     }, []);
+
     const sendMessage = async (senderId, receiverId) => {
         try {
             setMessage('');
@@ -58,9 +60,11 @@ const ChatRoom = () => {
             console.log('Error', error);
         }
     };
+    
     useEffect(() => {
         fetchMessages();
     }, []);
+    
     const fetchMessages = async () => {
         try {
             const senderId = userId;
@@ -90,6 +94,7 @@ const ChatRoom = () => {
     listenMessages();
     const keyboardVerticalOffset = Platform.OS == 'ios' ? 65 : 0;
     console.log('Messages', messages);
+    
     return (
         <KeyboardAvoidingView
             keyboardVerticalOffset={keyboardVerticalOffset}
@@ -101,22 +106,21 @@ const ChatRoom = () => {
                             <Pressable
                                 style={[
                                     item?.senderId == userId
-                                        ? {
-                                            alignSelf: 'flex-end',
-                                            backgroundColor: '#5b0d63',
-                                            padding: 10,
-                                            maxWidth: '60%',
-                                            borderRadius: 7,
+                                    ? {
+                                        alignSelf: 'flex-end',
+                                        backgroundColor: '#5b0d63',
+                                        padding: 10,
+                                        maxWidth: '60%',
+                                        borderRadius: 7,
                                             margin: 10,
-                                        }
-                                        : {
+                                    }: {
                                             alignSelf: 'flex-start',
                                             backgroundColor: '#e1e3e3',
                                             padding: 10,
                                             maxWidth: '60%',
                                             borderRadius: 7,
-                                        margin: 10,
-                                        },
+                                                margin: 10,
+                                    },
                                 ]}
                                 key={index}
                             >
@@ -126,8 +130,7 @@ const ChatRoom = () => {
                                         textAlign: 'left',
                                         letterSpacing: 0.3,
                                         color: item?.senderId == userId ? 'white' : 'black',
-                                    }}
-                                >
+                                }}>
                                     {item?.message}
                                 </Text>
                             </Pressable>

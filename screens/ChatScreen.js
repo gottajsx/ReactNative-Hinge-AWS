@@ -6,11 +6,11 @@ import {
     Image,
     Pressable,
 } from 'react-native';
-import React, {useContext, useState, useEffect} from 'react';
-import {AuthContext} from '../AuthContext';
+import React, { useContext, useState, useEffect } from 'react';
+import { AuthContext } from '../AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
+import { BASE_URL } from '../urls/url';
 import LottieView from 'lottie-react-native';
 import UserChat from '../components/UserChat';
   
@@ -23,12 +23,12 @@ const ChatScreen = () => {
         try {
             const token = await AsyncStorage.getItem('token');
             const response = await axios.get(`${BASE_URL}/get-matches/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+           });
   
-        setMatches(response.data.matches);
+            setMatches(response.data.matches);
         } catch (error) {
             console.log('Error', error);
         } finally {
@@ -163,75 +163,74 @@ const ChatScreen = () => {
                     ) : (
                             <View
                                 style={{flex: 1, justifyContent: 'center', alignItems: 'center'
-                                }}>
-                                    <Image
-                                        style={{width: 100, height: 100}}
-                                        source={{
-                                            uri: 'https://cdn-icons-png.flaticon.com/128/5065/5065340.png',
-                                        }}
-                                    />
+                            }}>
+                                <Image
+                                    style={{width: 100, height: 100}}
+                                    source={{
+                                        uri: 'https://cdn-icons-png.flaticon.com/128/5065/5065340.png',
+                                    }}
+                                />
     
-                                    <View style={{marginTop: 50}}>
+                                <View style={{marginTop: 50}}>
+                                    <Text
+                                        style={{
+                                            fontSize: 22,
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                    }}>
+                                        No Matches right now
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: 'gray',
+                                            marginTop: 10,
+                                            fontSize: 15,
+                                            textAlign: 'center',
+                                    }}>
+                                        Matches are more considered on hinge. We can help improve your
+                                        chances
+                                    </Text>
+                                </View>
+    
+                                <View style={{marginTop: 50}} />
+    
+                                    <Pressable
+                                        style={{
+                                            padding: 12,
+                                            borderRadius: 22,
+                                            backgroundColor: '#0a7064',
+                                            width: 250,
+                                    }}>
                                         <Text
                                             style={{
-                                                fontSize: 22,
-                                                fontWeight: 'bold',
                                                 textAlign: 'center',
-                                        }}>
-                                            No Matches right now
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: 'gray',
-                                                marginTop: 10,
+                                                fontWeight: '500',
                                                 fontSize: 15,
-                                                textAlign: 'center',
+                                                color: 'white',
                                         }}>
-                                            Matches are more considered on hinge. We can help improve your
-                                            chances
+                                            Boost Your Profile
                                         </Text>
-                                    </View>
+                                    </Pressable>
     
-                                    <View style={{marginTop: 50}} />
-    
-                                        <Pressable
+                                    <Pressable
+                                        style={{
+                                            padding: 12,
+                                            borderRadius: 22,
+                                            borderColor: '#E0E0E0',
+                                            borderWidth: 1,
+                                            marginTop: 15,
+                                            width: 250,
+                                    }}>
+                                        <Text
                                             style={{
-                                                padding: 12,
-                                                borderRadius: 22,
-                                                backgroundColor: '#0a7064',
-                                                width: 250,
+                                                textAlign: 'center',
+                                                fontWeight: '500',
+                                                fontSize: 15,
                                         }}>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontWeight: '500',
-                                                    fontSize: 15,
-                                                    color: 'white',
-                                            }}>
-                                                Boost Your Profile
-                                            </Text>
-                                        </Pressable>
-    
-                                        <Pressable
-                                            style={{
-                                                padding: 12,
-                                                borderRadius: 22,
-                            
-                                                borderColor: '#E0E0E0',
-                                                borderWidth: 1,
-                                                marginTop: 15,
-                                                width: 250,
-                                        }}>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontWeight: '500',
-                                                    fontSize: 15,
-                                            }}>
-                                                Upgrage to HingeX
-                                            </Text>
-                                        </Pressable>
-                                    </View>
+                                            Upgrage to HingeX
+                                        </Text>
+                                    </Pressable>
+                                </View>
                         )}
                 </View>
             </View>

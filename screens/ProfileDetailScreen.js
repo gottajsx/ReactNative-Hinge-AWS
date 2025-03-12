@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
-import React, {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import {TabBar, TabView} from 'react-native-tab-view';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { TabBar, TabView } from 'react-native-tab-view';
 import ViewProfile from '../components/ViewProfile';
 
 const ProfileDetailScreen = () => {
@@ -12,16 +12,18 @@ const ProfileDetailScreen = () => {
     ]);
     const route = useRoute();
     const userInfo = route?.params?.userInfo;
+    
     const renderScene = ({route}) => {
         switch (route.key) {
             case 'edit':
                 return <EditProfile />;
             case 'view':
                 return <ViewProfile userInfo={userInfo} />;
-    }
-  };
+        }
+    };
 
-const EditProfile = () => {};
+    const EditProfile = () => {};
+    
     return (
         <SafeAreaView style={{flex:1,backgroundColor:"white"}}> 
             <View style={{padding: 10}}>
@@ -44,8 +46,7 @@ const EditProfile = () => {};
                         activeColor="black"
                         inactiveColor="gray"
                     />
-                )}
-            />
+            )}/>
         </SafeAreaView>
     );
 };

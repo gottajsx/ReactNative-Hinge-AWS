@@ -136,19 +136,17 @@ const HingeX = () => {
                                 {planss?.map((item, index) => (
                                     <Pressable
                                         onPress={() => setPlan(item)}
-                                        style={{marginRight: 10}}
-                                    >
+                                        style={{marginRight: 10
+                                    }}>
                                         <View
                                             style={{
-                                                backgroundColor:
-                                                    plan?.name == item?.name ? 'white' : '#484848',
+                                                backgroundColor: plan?.name == item?.name ? 'white' : '#484848',
                                                 padding: 10,
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
                                                 borderTopLeftRadius: 10,
                                                 borderTopRightRadius: 10,
-                                            }}
-                                        >
+                                        }}>
                                             <Text
                                                 style={{
                                                     textAlign: 'center',
@@ -165,8 +163,7 @@ const HingeX = () => {
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
                                                 backgroundColor: '#101010',
-                                                borderColor:
-                                                    plan?.name == item?.name ? 'white' : '#484848',
+                                                borderColor: plan?.name == item?.name ? 'white' : '#484848',
                                                 borderWidth: 2,
                                                 borderBottomLeftRadius: 10,
                                                 borderBottomRightRadius: 10,
@@ -183,7 +180,7 @@ const HingeX = () => {
                                                     letterSpacing: 0.6,
                                                     color: 'white',
                                             }}>
-                                            {   item?.price}
+                                                {item?.price}
                                             </Text>
                                         </View>
                                     </Pressable>
@@ -193,15 +190,14 @@ const HingeX = () => {
     
                         <View style={{marginTop: 20}}>
                             <View
-                                style={{flexDirection: 'row', alignItems: 'center', gap: 10}}
-                            >
+                                style={{flexDirection: 'row', alignItems: 'center', gap: 10
+                            }}>
                                 <View>
                                     <Image
                                         style={{width: 70, height: 70, borderRadius: 35}}
                                         source={{
                                             uri: 'https://www.instagram.com/p/C-ApDZLyrBh/media/?size=l',
-                                         }}
-                                    />
+                                    }}/>
                                 </View>
     
                                 <View>
@@ -234,19 +230,17 @@ const HingeX = () => {
                                     borderColor: '#808080',
                                     borderWidth: 0.3,
                                     marginVertical: 20,
-                                }}
-                            />
+                            }}/>
     
                             <View
-                                style={{flexDirection: 'row', alignItems: 'center', gap: 10}}
-                            >
+                                style={{flexDirection: 'row', alignItems: 'center', gap: 10
+                            }}>
                                 <View>
                                     <Image
                                         style={{width: 70, height: 70, borderRadius: 35}}
                                         source={{
                                             uri: 'https://www.instagram.com/p/CGm4TXAFPBw/media/?size=l',
-                                    }}
-                                    />
+                                    }}/>
                                 </View>
     
                                 <View>
@@ -279,19 +273,17 @@ const HingeX = () => {
                                     borderColor: '#808080',
                                     borderWidth: 0.3,
                                     marginVertical: 20,
-                            }}
-                            />
+                            }}/>
     
                             <View
-                                style={{flexDirection: 'row', alignItems: 'center', gap: 10}}
-                            >
+                                style={{flexDirection: 'row', alignItems: 'center', gap: 10
+                            }}>
                                 <View>
                                     <Image
                                         style={{width: 70, height: 70, borderRadius: 35}}
                                         source={{
                                             uri: 'https://www.instagram.com/p/CgyWempo_iI/media/?size=l',
-                                        }}
-                                    />
+                                    }}/>
                                 </View>
     
                                 <View>
@@ -335,23 +327,23 @@ const HingeX = () => {
                             <View style={{flexDirection: 'row', gap: 14}}>
                             <View
                                 style={{
-                                width: 42,
-                                height: 42,
-                                borderRadius: 21,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: '#484848',
-                                }}>
+                                    width: 42,
+                                    height: 42,
+                                    borderRadius: 21,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#484848',
+                            }}>
                                 <Ionicons name="infinite-outline" size={22} color="white" />
                             </View>
                             <Text
                                 style={{
-                                fontSize: 17,
-                                fontWeight: '600',
-                                marginTop: 8,
-                                color: 'white',
-                                letterSpacing: 0.6,
-                                }}>
+                                    fontSize: 17,
+                                    fontWeight: '600',
+                                    marginTop: 8,
+                                    color: 'white',
+                                    letterSpacing: 0.6,
+                            }}>
                                 Send unlimited likes*
                             </Text>
                             </View>
@@ -359,23 +351,23 @@ const HingeX = () => {
                             <View style={{flexDirection: 'row', gap: 14, marginVertical: 15}}>
                             <View
                                 style={{
-                                width: 42,
-                                height: 42,
-                                borderRadius: 21,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: '#484848',
-                                }}>
+                                    width: 42,
+                                    height: 42,
+                                    borderRadius: 21,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#484848',
+                            }}>
                                 <Ionicons name="person-outline" size={22} color="white" />
                             </View>
                             <Text
                                 style={{
-                                fontSize: 17,
-                                fontWeight: '600',
-                                marginTop: 8,
-                                letterSpacing: 0.6,
-                                color: 'white',
-                                }}>
+                                    fontSize: 17,
+                                    fontWeight: '600',
+                                    marginTop: 8,
+                                    letterSpacing: 0.6,
+                                    color: 'white',
+                            }}>
                                 See everyone who likes you
                             </Text>
                             </View>
@@ -383,23 +375,23 @@ const HingeX = () => {
                             <View style={{flexDirection: 'row', gap: 14}}>
                             <View
                                 style={{
-                                width: 42,
-                                height: 42,
-                                borderRadius: 21,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: '#484848',
-                                }}>
+                                    width: 42,
+                                    height: 42,
+                                    borderRadius: 21,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#484848',
+                            }}>
                                 <Ionicons name="filter-outline" size={22} color="white" />
                             </View>
                             <Text
                                 style={{
-                                fontSize: 17,
-                                fontWeight: '600',
-                                marginTop: 8,
-                                letterSpacing: 0.6,
-                                color: 'white',
-                                }}>
+                                    fontSize: 17,
+                                    fontWeight: '600',
+                                    marginTop: 8,
+                                    letterSpacing: 0.6,
+                                    color: 'white',
+                            }}>
                                 Set more dating preferences
                             </Text>
                             </View>
@@ -469,8 +461,8 @@ const HingeX = () => {
                             borderRadius: 20,
                     }}>
                         <Text
-                            style={{textAlign: 'center', fontSize: 15, fontWeight: '500'}}
-                        >
+                            style={{textAlign: 'center', fontSize: 15, fontWeight: '500'
+                        }}>
                             Get {plan?.plan} for {plan?.price}
                         </Text>
                     </Pressable>

@@ -7,14 +7,14 @@ import {
     Pressable,
     Alert,
     ActivityIndicator,
-  } from 'react-native';
-import React, {useState,useContext} from 'react';
+} from 'react-native';
+import React, { useState, useContext } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import RazorpayCheckout from 'react-native-razorpay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {BASE_URL} from '../urls/url';
-import {useNavigation} from '@react-navigation/native';
+import { BASE_URL } from '../urls/url';
+import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../AuthContext';
   
 const HingePlus = () => {
@@ -121,7 +121,8 @@ const HingePlus = () => {
                             uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSs48AlXs6q_E_rz9UGJDy8wyj6-Mft76F2wHjs2uboOn-TDF-XMfXSeiYNi0L_3sWQFY&usqp=CAU',
                     }}>
                         <View
-                            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            style={{flex: 1, justifyContent: 'center', alignItems: 'center'
+                        }}>
                             <Text
                                 style={{
                                     fontSize: 30,
@@ -137,56 +138,56 @@ const HingePlus = () => {
                     <View style={{marginTop: 25}}>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             {plans?.map((item, index) => (
-                            <Pressable
-                                onPress={() => setPlan(item)}
-                                style={{marginRight: 10}}>
-                                <View
-                                    style={{
-                                        backgroundColor:
-                                        plan?.name == item?.name ? '#8e33b5' : '#B0B0B0',
-                                        padding: 10,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        borderTopLeftRadius: 10,
-                                        borderTopRightRadius: 10,
-                                }}>
-                                    <Text
+                                <Pressable
+                                    onPress={() => setPlan(item)}
+                                    style={{marginRight: 10}}>
+                                    <View
                                         style={{
-                                            textAlign: 'center',
-                                            color: 'white',
-                                            fontWeight: '500',
+                                            backgroundColor:
+                                            plan?.name == item?.name ? '#8e33b5' : '#B0B0B0',
+                                            padding: 10,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderTopLeftRadius: 10,
+                                            borderTopRightRadius: 10,
                                     }}>
-                                        {item?.name}
-                                    </Text>
-                                </View>
-            
-                                <View
-                                    style={{
-                                        padding: 10,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: 'white',
-                                        borderColor:
-                                        plan?.name == item?.name ? '#8e33b5' : '#E0E0E0',
-                                        borderWidth: 2,
-                                        borderBottomLeftRadius: 10,
-                                        borderBottomRightRadius: 10,
-                                }}>
-                                    <Text style={{color: 'gray', fontSize: 15}}>
-                                        {item?.plan}
-                                    </Text>
-            
-                                    <Text
-                                        style={{
-                                        fontSize: 17,
-                                        fontWeight: '600',
-                                        marginTop: 8,
-                                        letterSpacing: 0.6,
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                color: 'white',
+                                                fontWeight: '500',
                                         }}>
-                                        {item?.price}
-                                    </Text>
-                                </View>
-                            </Pressable>
+                                            {item?.name}
+                                        </Text>
+                                    </View>
+                
+                                    <View
+                                        style={{
+                                            padding: 10,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            backgroundColor: 'white',
+                                            borderColor:
+                                            plan?.name == item?.name ? '#8e33b5' : '#E0E0E0',
+                                            borderWidth: 2,
+                                            borderBottomLeftRadius: 10,
+                                            borderBottomRightRadius: 10,
+                                    }}>
+                                        <Text style={{color: 'gray', fontSize: 15}}>
+                                            {item?.plan}
+                                        </Text>
+                
+                                        <Text
+                                            style={{
+                                            fontSize: 17,
+                                            fontWeight: '600',
+                                            marginTop: 8,
+                                            letterSpacing: 0.6,
+                                            }}>
+                                            {item?.price}
+                                        </Text>
+                                    </View>
+                                </Pressable>
                             ))}
                         </ScrollView>
                     </View>
@@ -202,7 +203,7 @@ const HingePlus = () => {
                             alignItems: 'center',
                             backgroundColor: '#E0E0E0',
                         }}>
-                        <Ionicons name="infinite-outline" size={22} color="black" />
+                            <Ionicons name="infinite-outline" size={22} color="black" />
                         </View>
                             <Text
                                 style={{
@@ -257,7 +258,7 @@ const HingePlus = () => {
                                         marginTop: 8,
                                         letterSpacing: 0.6,
                                 }}>
-                                Set more dating preferences
+                                    Set more dating preferences
                                 </Text>
                         </View>
         
@@ -339,8 +340,8 @@ const HingePlus = () => {
             )}
         </>
     );
-  };
+};
   
-  export default HingePlus;
+export default HingePlus;
   
-  const styles = StyleSheet.create({});
+const styles = StyleSheet.create({});

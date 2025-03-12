@@ -8,9 +8,9 @@ import {
     TextInput,
     TouchableOpacity,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
     getRegistrationProgress,
     saveRegistrationProgress,
@@ -19,6 +19,7 @@ import {
 const NameScreen = () => {
     const [firstName, setFirstName] = useState('');
     const navigation = useNavigation();
+    
     useEffect(() => {
         getRegistrationProgress('Name').then(progressData => {
             if (progressData) {
@@ -26,12 +27,14 @@ const NameScreen = () => {
             }
         });
     }, []);
+    
     const handleNext = () => {
         if (firstName.trim() !== '') {
             saveRegistrationProgress('Name', {firstName});
         }
         navigation.navigate('Email');
     };
+    
     return (
         <SafeAreaView
             style={{
@@ -61,8 +64,7 @@ const NameScreen = () => {
                         style={{width: 100, height: 40}}
                         source={{
                             uri: 'https://cdn-icons-png.flaticon.com/128/10613/10613685.png',
-                        }}
-                    />
+                    }}/>
                 </View>
   
                 <View style={{marginTop: 30}}>
@@ -72,8 +74,9 @@ const NameScreen = () => {
                             fontWeight: 'bold',
                             fontFamily: 'GeezaPro-Bold',
                     }}>
-                    What's your name?
+                        What's your name?
                     </Text>
+
                     <TextInput
                         value={firstName}
                         onChangeText={text => setFirstName(text)}
@@ -89,8 +92,7 @@ const NameScreen = () => {
                             paddingBottom: 10,
                             fontFamily: 'GeezaPro-Bold',
                             fontSize: firstName ? 22 : 22,
-                        }}
-                    />
+                    }}/>
                     <TextInput
                         placeholder="Last Name"
                         placeholderTextColor={'#BEBEBE'}
@@ -103,8 +105,7 @@ const NameScreen = () => {
                             paddingBottom: 10,
                             fontFamily: 'GeezaPro-Bold',
                             fontSize: firstName ? 22 : 22,
-                        }}
-                    />
+                    }}/>
                     <Text style={{fontSize: 15, color: 'gray', fontWeight: '500'}}>
                         Last name is optional
                     </Text>
@@ -113,8 +114,8 @@ const NameScreen = () => {
                 <TouchableOpacity
                     onPress={handleNext}
                     activeOpacity={0.8}
-                    style={{marginTop: 30, marginLeft: 'auto'}}
-                >
+                    style={{marginTop: 30, marginLeft: 'auto'
+                }}>
                     <Ionicons
                         name="chevron-forward-circle-outline"
                         size={45}
