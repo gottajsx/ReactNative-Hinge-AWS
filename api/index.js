@@ -19,20 +19,20 @@ import {
     ResendConfirmationCodeCommand,
     SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { docClient, PutCommand } from './db.js';
+import {docClient, PutCommand} from './db.js';
 import {
     BatchGetCommand,
     GetCommand,
     UpdateCommand,
-} from "@aws-sdk/lib-dynamodb";
+} from '@aws-sdk/lib-dynamodb';
 import { profile } from 'console';
 import http from 'http';
-import { Server, Socket} from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 const app = express();
-
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false}));
+
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(express.json());
 
@@ -40,18 +40,18 @@ const PORT = 9000;
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
-})
+});
 
-const dynamoDBClient = new DynamoDBClient({region: 'us-east-2'});
+const dynamoDbClient = new DynamoDBClient({region: 'us-east-2'});
 
 const cognitoClient = new CognitoIdentityProviderClient({region: 'us-east-2'});
 
 const server = http.createServer(app);
 
-
 app.post('/register', async (req, res) => {
     try {
         const userData = req.body;
+
         console.log('Data', userData);
 
         const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -94,16 +94,16 @@ app.post('/register', async (req, res) => {
             '582e6b12ec6da3125121e9be07d00f63495ace020ec9079c30abeebd329986c5c35548b068ddb4b187391a5490c880137c1528c76ce2feacc5ad781a742e2de0'; // Use a better key management
         const token = jwt.sign({userId: newUser.userId}, secretKey);
 
-        res.status(200).json({token})
+        res.status(200).json({token});
     } catch (error) {
         console.log('Error creating user', error);
         res.status(500).json({error: 'Internal server error'});
     }
 });
 
-
 app.post('/sendOtp', async (req, res) => {
     const {email, password} = req.body;
+
     console.log('email', email);
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -115,7 +115,7 @@ app.post('/sendOtp', async (req, res) => {
         Username: email,
         Password: password,
         UserAttributes: [{Name: 'email', Value: email}],
-    }
+    };
 
     try {
         const command = new SignUpCommand(signUpParams);
@@ -123,11 +123,10 @@ app.post('/sendOtp', async (req, res) => {
 
         res.status(200).json({message: 'OTP sent to email!'});
     } catch (error) {
-        console.error('Error sending OTP:', error)
+        console.error('Error sending OTP:', error);
         res.status(400).json({error: 'Failed to send OTP. Please try again.'});
     }
 });
-
 
 app.post('/resendOtp', async (req, res) => {
     const {email} = req.body;
@@ -147,7 +146,6 @@ app.post('/resendOtp', async (req, res) => {
     }
 });
 
-
 app.post('/confirmSignup', async (req, res) => {
     const {email, otpCode} = req.body;
 
@@ -155,7 +153,8 @@ app.post('/confirmSignup', async (req, res) => {
         ClientId: '',
         Username: email,
         ConfirmationCode: otpCode,
-    }
+    };
+
     try {
         const command = new ConfirmSignUpCommand(confirmParams);
         await cognitoClient.send(command);
@@ -166,9 +165,8 @@ app.post('/confirmSignup', async (req, res) => {
     }
 });
 
-
 app.get('/matches', async (req, res) => {
-    const {userId} = req.query
+    const {userId} = req.query;
 
     // console.log('user', userId);
 
@@ -180,7 +178,7 @@ app.get('/matches', async (req, res) => {
         const userParams = {
             TableName: 'users',
             Key: {userId},
-        }
+        };
 
         const userResult = await dynamoDbClient.send(new GetCommand(userParams));
 
@@ -209,17 +207,16 @@ app.get('/matches', async (req, res) => {
             TableName: 'users',
             FilterExpression:
                 'userId <> :currentUserId AND (contains(:genderPref,gender)) AND NOT contains(:excludedIds,userId)',
-                ExpressionAttributeValues: {
-                    ':currentUserId': {S: user.userId},
-                    ':genderPref': {
-                        L: genderFilter.length > 0 ? genderFilter : [{S: 'None'}],
-                    },
-                    ':excludedIds': {L: excludeIds},
-                },    
+            ExpressionAttributeValues: {
+                ':currentUserId': {S: user.userId},
+                ':genderPref': {
+                    L: genderFilter.length > 0 ? genderFilter : [{S: 'None'}],
+                },
+                ':excludedIds': {L: excludeIds},
+            },
         };
 
         const scanResult = await dynamoDbClient.send(new ScanCommand(scanParams));
-
 
         const matches = scanResult.Items.map(item => ({
             userId: item?.userId.S,
@@ -236,8 +233,8 @@ app.get('/matches', async (req, res) => {
             imageUrls: item.imageUrls?.L.map(url => url.S) || [],
             prompts:
                 item?.prompts.L.map(prompt => ({
-                    question: prompt.M.question.S,
-                    answer: prompt.M.answer.S,
+                question: prompt.M.question.S,
+                answer: prompt.M.answer.S,
                 })) || [],
         }));
 
@@ -248,8 +245,7 @@ app.get('/matches', async (req, res) => {
     }
 });
 
-
-app.get('/user_info', async (req, res) => {
+app.get('/user-info', async (req, res) => {
     const {userId} = req.query;
 
     console.log('User ID', userId);
@@ -259,7 +255,7 @@ app.get('/user_info', async (req, res) => {
     }
 
     try {
-        const params = {
+            const params = {
             TableName: 'users',
             Key: {userId},
         };
@@ -278,7 +274,6 @@ app.get('/user_info', async (req, res) => {
         res.status(500).json({message: 'Internal server error'});
     }
 });
-
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -300,32 +295,31 @@ const authenticateToken = (req, res, next) => {
 
         req.user = user;
         next();
-    });   
+    });
 };
-
 
 app.post('/like-profile', authenticateToken, async (req, res) => {
     const {userId, likedUserId, image, comment = null, type, prompt} = req.body;
-  
+
     if (req.user.userId !== userId) {
         return res.status(403).json({message: 'unauthorized action'});
     }
     if (!userId || !likedUserId) {
         return res.status(404).json({message: 'Missing required parametered'});
     }
-  
+
     try {
         const userParams = {
             TableName: 'users',
             Key: {userId},
         };
-  
+
         const userData = await dynamoDbClient.send(new GetCommand(userParams));
-  
+
         if (!userData.Item) {
             return res.status(404).json({message: 'User not found'});
         }
-  
+
         const user = userData.Item;
         const likesRemaining = user.likes;
         console.log('likes remaining', likesRemaining);
@@ -334,9 +328,9 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
         const now = new Date();
         const maxLikes = 2;
         const oneDay = 24 * 60 * 60 * 1000;
-  
+
         const timeSinceLastUpdate = now - likesLastUpdated;
-  
+
         if (timeSinceLastUpdate >= oneDay) {
             const resetParams = {
                 TableName: 'users',
@@ -348,17 +342,17 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
                 },
             };
             await dynamoDbClient.send(new UpdateCommand(resetParams));
-  
+
             user.likes = {N: maxLikes.toString()};
         } else if (likesRemaining <= 0) {
             return res.status(403).json({
                 message:
-                    'Daily like limit reached, please subscribe or try again tomorrow',
+                'Daily like limit reached, please subscribe or try again tomorrow',
             });
         }
-  
+
         const newLikes = likesRemaining - 1;
-  
+
         const decrementLikesParams = {
             TableName: 'users',
             Key: {userId},
@@ -367,11 +361,11 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
                 ':newLikes': newLikes,
             },
         };
-  
+
         await dynamoDbClient.send(new UpdateCommand(decrementLikesParams));
-  
+
         let newLike = {userId, type};
-  
+
         if (type == 'image') {
             if (!image) {
                 return res.status(404).json({message: 'Image url is required'});
@@ -383,11 +377,11 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
             }
             newLike.prompt = prompt;
         }
-  
+
         if (comment) {
             newLike.comment = comment;
         }
-  
+
         //step 1
         const updatedReceivedLikesParams = {
             TableName: 'users',
@@ -400,11 +394,11 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
             },
             ReturnValues: 'UPDATED_NEW',
         };
-  
+
         await dynamoDbClient.send(new UpdateCommand(updatedReceivedLikesParams));
-  
+
         //step 2
-  
+
         const updatedLikedParams = {
             TableName: 'users',
             Key: {userId},
@@ -416,38 +410,37 @@ app.post('/like-profile', authenticateToken, async (req, res) => {
             },
             ReturnValues: 'UPDATED_NEW',
         };
-  
+
         await dynamoDbClient.send(new UpdateCommand(updatedLikedParams));
-  
+
         res.status(200).json({message: 'Profile Likes succesfully!'});
     } catch (error) {
         console.log('Error liking', error);
         res.status(500).json({message: 'Internal server error'});
     }
-  });
-
+});
 
 app.get('/received-likes/:userId', authenticateToken, async (req, res) => {
     const {userId} = req.params;
-  
+
     console.log('User', userId);
-  
+
     try {
         const params = {
             TableName: 'users',
             Key: {userId: userId},
             ProjectionExpression: 'receivedLikes',
         };
-  
+
         const data = await dynamoDbClient.send(new GetCommand(params));
         console.log('User', data);
-  
+
         if (!data.Item) {
             return res.status(404).json({message: 'User not found'});
         }
-  
+
         const receivedLikes = data?.Item?.receivedLikes || [];
-  
+
         const enrichedLikes = await Promise.all(
             receivedLikes.map(async like => {
                 const userParams = {
@@ -455,40 +448,38 @@ app.get('/received-likes/:userId', authenticateToken, async (req, res) => {
                     Key: {userId: like.userId},
                     ProjectionExpression: 'userId, firstName, imageUrls, prompts',
                 };
-  
+
                 const userData = await dynamoDbClient.send(new GetCommand(userParams));
                 console.log('User data', userData);
-  
+
                 const user = userData?.Item
-                    ? {
-                        userId: userData.Item.userId,
-                        firstName: userData.Item.firstName,
-                        imageUrls: userData.Item.imageUrls || null,
-                        prompts: userData.Item.prompts,
-                    }
-                    : {userId: like.userId, firstName: null, imageUrl: null};
-  
+                ? {
+                    userId: userData.Item.userId,
+                    firstName: userData.Item.firstName,
+                    imageUrls: userData.Item.imageUrls || null,
+                    prompts: userData.Item.prompts,
+                }
+                : {userId: like.userId, firstName: null, imageUrl: null};
+
                 return {...like, userId: user};
             }),
-        
         );
-  
-        console.log('Encriches', enrichedLikes);
-  
-        res.status(200).json({receivedLikes: enrichedLikes});
-        } catch (error) {
-            console.log('Error getting the likes');
-            res.status(500).json({message: 'Internal server error'});
-        }
-});
 
+        console.log('Encriches', enrichedLikes);
+
+        res.status(200).json({receivedLikes: enrichedLikes});
+    } catch (error) {
+        console.log('Error getting the likes');
+        res.status(500).json({message: 'Internal server error'});
+    }
+});
 
 app.post('/login', async (req, res) => {
     const {email, password} = req.body;
-  
+
     console.log('Email', email);
     console.log('password', password);
-  
+
     const authParams = {
         AuthFlow: 'USER_PASSWORD_AUTH',
         ClientId: '',
@@ -497,14 +488,14 @@ app.post('/login', async (req, res) => {
             PASSWORD: password,
         },
     };
-  
+
     try {
         const authCommand = new InitiateAuthCommand(authParams);
         const authResult = await cognitoClient.send(authCommand);
-  
+
         const {IdToken, AccessToken, RefreshToken} =
-            authResult.AuthenticationResult;
-  
+        authResult.AuthenticationResult;
+
         const userParams = {
             TableName: 'users',
             IndexName: 'email-index',
@@ -513,28 +504,27 @@ app.post('/login', async (req, res) => {
                 ':emailValue': {S: email},
             },
         };
-  
+
         const userResult = await dynamoDbClient.send(new QueryCommand(userParams));
-  
+
         if (!userResult.Items || userResult.Items.length == 0) {
             return res.status(404).json({error: 'User not found'});
         }
-  
+
         const user = userResult.Items[0];
         const userId = user?.userId.S;
-  
+
         const secretKey =
-            '582e6b12ec6da3125121e9be07d00f63495ace020ec9079c30abeebd329986c5c35548b068ddb4b187391a5490c880137c1528c76ce2feacc5ad781a742e2de0'; // Use a better key management
-  
+        '582e6b12ec6da3125121e9be07d00f63495ace020ec9079c30abeebd329986c5c35548b068ddb4b187391a5490c880137c1528c76ce2feacc5ad781a742e2de0'; // Use a better key management
+
         const token = jwt.sign({userId: userId, email: email}, secretKey);
-  
+
         res.status(200).json({token, IdToken, AccessToken});
     } catch (error) {
         console.log('Error', error);
         return res.status(500).json({message: 'Interval server error'});
     }
 });
-
 
 async function getIndexToRemove(selectedUserId, currentUserId) {
     const result = await docClient.send(
@@ -544,18 +534,104 @@ async function getIndexToRemove(selectedUserId, currentUserId) {
             ProjectionExpression: 'likedProfiles',
         }),
     );
-  
+
     const likedProfiles = result?.Item?.likedProfiles || [];
     return likedProfiles?.findIndex(
         profile => profile.likedUserId == currentUserId,
     );
-  }
+}
 
+app.post('/create-match', authenticateToken, async (req, res) => {
+    try {
+        console.log('Hey');
+        const {currentUserId, selectedUserId} = req.body;
+
+        console.log('current', currentUserId);
+        console.log('selected', selectedUserId);
+
+        const userResponse = await docClient.send(
+            new GetCommand({
+                TableName: 'users',
+                Key: {userId: currentUserId},
+            }),
+        );
+
+        const receivedLikes = userResponse?.Item?.receivedLikes || [];
+
+        const indexToRemove = receivedLikes.findIndex(
+            like => like.userId == selectedUserId,
+        );
+
+        if (indexToRemove == -1) {
+            return res
+                .status(400)
+                .json({message: 'Selected User not found in receivedLikes'});
+        }
+
+        const index = await getIndexToRemove(selectedUserId, currentUserId);
+
+        if (index == -1) {
+            return res
+                .status(400)
+                .json({message: 'Current user not in likedProfiles'});
+        }
+
+        await docClient.send(
+            new UpdateCommand({
+                TableName: 'users',
+                Key: {userId: selectedUserId},
+                UpdateExpression: `
+                SET #matches = list_append(if_not_exists(#matches, :emptyList), :currentUser)
+                REMOVE #likedProfiles[${index}]
+            `,
+                ExpressionAttributeNames: {
+                    '#matches': 'matches',
+                    '#likedProfiles': 'likedProfiles',
+                },
+                ExpressionAttributeValues: {
+                    ':currentUser': [currentUserId],
+                    ':emptyList': [],
+                },
+            }),
+        );
+
+        await docClient.send(
+            new UpdateCommand({
+                TableName: 'users',
+                Key: {userId: currentUserId},
+                UpdateExpression:
+                    'SET #matches = list_append(if_not_exists(#matches, :emptyList), :selectedUser)',
+                ExpressionAttributeNames: {
+                   '#matches': 'matches',
+                },
+                ExpressionAttributeValues: {
+                    ':selectedUser': [selectedUserId],
+                    ':emptyList': [],
+                },
+            }),
+        );
+
+        await docClient.send(
+            new UpdateCommand({
+                TableName: 'users',
+                Key: {userId: currentUserId},
+                UpdateExpression: `REMOVE #receivedLikes[${indexToRemove}]`,
+                ExpressionAttributeNames: {
+                    '#receivedLikes': 'receivedLikes',
+                },
+            }),
+        );
+
+        res.status(200).json({message: 'Match created successfully!'});
+    } catch (error) {
+        console.log('Error creating a match', error);
+    }
+});
 
 app.get('/get-matches/:userId', authenticateToken, async (req, res) => {
     try {
         const {userId} = req.params;
-  
+
         const userResult = await docClient.send(
             new GetCommand({
                 TableName: 'users',
@@ -563,62 +639,61 @@ app.get('/get-matches/:userId', authenticateToken, async (req, res) => {
                 ProjectionExpression: 'matches',
             }),
         );
-  
+
         const matches = userResult?.Item?.matches || [];
-  
+
         if (!matches.length) {
             return res.status(200).json({matches: []});
         }
-  
+
         const batchGetParams = {
             RequestItems: {
                 users: {
-                    Keys: matches.map(matchId => ({userId: matchId})),
-                    ProjectionExpression: 'userId, firstName, imageUrls, prompts',
+                Keys: matches.map(matchId => ({userId: matchId})),
+                ProjectionExpression: 'userId, firstName, imageUrls, prompts',
                 },
             },
         };
-  
+
         const matchResult = await docClient.send(
             new BatchGetCommand(batchGetParams),
         );
-  
+
         const matchedUsers = matchResult?.Responses?.users || [];
-  
+
         res.status(200).json({matches: matchedUsers});
     } catch (error) {
-             console.log('Error getting matches', error);
+        console.log('Error getting matches', error);
     }
 });
-
 
 server.listen(4000, () => {
     console.log('Server is running on port 4000');
 });
-  
+
 const io = new Server(server);
-  
+
 const userSocketMap = {};
-  
+
 io.on('connection', socket => {
     const userId = socket.handshake.query.userId;
-  
+
     if (userId !== undefined) {
         userSocketMap[userId] = socket.id;
     }
-  
+
     console.log('User socket data', userSocketMap);
-  
+
     socket.on('disconnect', () => {
         console.log('User disconnected', socket.id);
         delete userSocketMap[userId];
     });
-  
+
     socket.on('sendMessage', ({senderId, receiverId, message}) => {
         const receiverSocketId = userSocketMap[receiverId];
-  
+
         console.log('receiver ID', receiverId);
-  
+
         if (receiverSocketId) {
             io.to(receiverSocketId).emit('receiveMessage', {
                 senderId,
@@ -626,19 +701,18 @@ io.on('connection', socket => {
             });
         }
     });
-  });
-  
+});
 
-  app.post('/sendMessage', async (req, res) => {
+app.post('/sendMessage', async (req, res) => {
     try {
         const {senderId, receiverId, message} = req.body;
-  
+
         if (!senderId || !receiverId || !message) {
             return res.status(400).json({error: 'Missing fields'});
         }
-  
+
         const messageId = crypto.randomUUID();
-  
+
         const params = {
             TableName: 'messages',
             Item: {
@@ -649,10 +723,10 @@ io.on('connection', socket => {
                 timestamp: {S: new Date().toISOString()},
             },
         };
-  
+
         const command = new PutItemCommand(params);
         await dynamoDbClient.send(command);
-  
+
         const receiverSocketId = userSocketMap[receiverId];
         if (receiverSocketId) {
             console.log('Emitting new message to the reciever', receiverId);
@@ -660,11 +734,11 @@ io.on('connection', socket => {
                 senderId,
                 receiverId,
                 message,
-                });
+            });
         } else {
-            console.log('Receiver socket ID not found');
+        console.log('Receiver socket ID not found');
         }
-  
+
         res.status(201).json({message: 'Message sent successfully!'});
     } catch (error) {
         console.log('Error', error);
@@ -672,15 +746,14 @@ io.on('connection', socket => {
     }
 });
 
-
 app.get('/messages', async (req, res) => {
     try {
         const {senderId, receiverId} = req.query;
-  
+
         if (!senderId || !receiverId) {
             return res.status(400).json({error: 'missing fields'});
         }
-  
+
         const senderQueryParams = {
             TableName: 'messages',
             IndexName: 'senderId-index',
@@ -689,7 +762,7 @@ app.get('/messages', async (req, res) => {
                 ':senderId': {S: senderId},
             },
         };
-  
+
         const receiverQueryParams = {
             TableName: 'messages',
             IndexName: 'receiverId-index',
@@ -698,21 +771,21 @@ app.get('/messages', async (req, res) => {
                 ':receiverId': {S: senderId},
             },
         };
-  
+
         const senderQueryCommand = new QueryCommand(senderQueryParams);
         const receiverQueryCommand = new QueryCommand(receiverQueryParams);
-  
+
         const senderResults = await dynamoDbClient.send(senderQueryCommand);
         const receiverResults = await dynamoDbClient.send(receiverQueryCommand);
-  
+
         const filteredSenderMessages = senderResults.Items.filter(
             item => item.receiverId.S == receiverId,
         );
-  
+
         const filteredReceiverMessages = receiverResults.Items.filter(
             item => item.senderId.S == receiverId,
         );
-  
+
         const combinedMessages = [
             ...filteredSenderMessages,
             ...filteredReceiverMessages,
@@ -725,29 +798,28 @@ app.get('/messages', async (req, res) => {
             timestamp: item.timestamp.S,
         }))
         .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-  
+
         res.status(200).json(combinedMessages);
     } catch (error) {
         console.log('Error fetching messages', error);
     }
 });
 
-
 app.post('/subscribe', authenticateToken, async (req, res) => {
     const {userId, plan, type} = req.body;
-  
+
     console.log('User', userId);
     console.log('plan', plan);
     console.log('type', type);
-  
+
     if (!userId || !plan) {
         return res.status(400).json({message: 'Missing required fields'});
     }
-  
+
     try {
         const startDate = new Date().toISOString();
         const duration =
-            plan?.plan === '1 week'
+        plan?.plan === '1 week'
             ? 7
             : plan?.plan === '1 month'
             ? 30
@@ -755,9 +827,9 @@ app.post('/subscribe', authenticateToken, async (req, res) => {
             ? 90
             : 180;
         const endDate = dayjs(startDate).add(duration, 'day').toISOString();
-  
+
         const paymentId = crypto.randomUUID();
-  
+
         const params = {
             TableName: 'subscriptions',
             Item: {
@@ -771,9 +843,9 @@ app.post('/subscribe', authenticateToken, async (req, res) => {
                 status: {S: 'active'},
             },
         };
-  
+
         await dynamoDbClient.send(new PutItemCommand(params));
-  
+
         const updateParams = {
             TableName: 'users',
             Key: {userId: {S: userId}},
@@ -799,9 +871,9 @@ app.post('/subscribe', authenticateToken, async (req, res) => {
             },
             ReturnValues: 'UPDATED_NEW',
         };
-  
+
         await dynamoDbClient.send(new UpdateItemCommand(updateParams));
-  
+
         res.status(200).json({message: 'Subscription saved successfully!'});
     } catch (error) {
         console.log('ERROR subscribing', error);
@@ -809,26 +881,25 @@ app.post('/subscribe', authenticateToken, async (req, res) => {
     }
 });
 
-
 app.post('/payment-success', async (req, res) => {
     try {
         const {userId, rosesToAdd} = req.body;
-  
+
         const userParams = {
             TableName: 'users',
             Key: {userId},
         };
         const userData = await dynamoDbClient.send(new GetCommand(userParams));
-  
+
         if (!userData.Item) {
             return res.status(404).json({message: 'User not found'});
         }
-  
+
         const user = userData.Item;
         const roses = user.roses;
-  
+
         const newRoses = Number(roses) + Number(rosesToAdd);
-  
+
         const updatedRoseParams = {
             TableName: 'users',
             Key: {userId},
@@ -837,9 +908,9 @@ app.post('/payment-success', async (req, res) => {
                 ':newRoses': newRoses,
             },
         };
-  
+
         await dynamoDbClient.send(new UpdateCommand(updatedRoseParams));
-  
+
         const paymentId = crypto.randomUUID();
         const paymentParams = {
             TableName: 'payments',
@@ -849,52 +920,51 @@ app.post('/payment-success', async (req, res) => {
                 rosesPurchased: {N: rosesToAdd},
             },
         };
-  
+
         await dynamoDbClient.send(new PutItemCommand(paymentParams));
-  
+
         return res
-            .status(200)
-            .json({message: 'Payment successfull and roses updated'});
+        .status(200)
+        .json({message: 'Payment successfull and roses updated'});
     } catch (error) {
         console.log('Error', error);
         return res.status(500).json({message: 'Interval server error'});
     }
 });
-  
 
 app.post('/send-rose', authenticateToken, async (req, res) => {
     const {userId, likedUserId, image, comment = null, type, prompt} = req.body;
-  
+
     if (req.user.userId !== userId) {
         return res.status(403).json({message: 'Unauthorized action'});
     }
-  
+
     if (!userId) {
         return res.status(400).json({message: 'Missing req parameters'});
     }
-  
+
     try {
         const userParams = {
             TableName: 'users',
             Key: {userId},
         };
-  
+
         const userData = await dynamoDbClient.send(new GetCommand(userParams));
-  
+
         if (!userData.Item) {
             return res.status(404).json({message: 'User not found'});
         }
-  
+
         const user = userData.Item;
-  
+
         const rosesRemaining = user?.roses;
-  
+
         if (rosesRemaining <= 0) {
             return res.status(403).json({message: 'No roses remaining to send'});
         }
-  
+
         const newRosesCount = rosesRemaining - 1;
-  
+
         const decrementRosesParams = {
             TableName: 'users',
             Key: {userId},
@@ -903,34 +973,33 @@ app.post('/send-rose', authenticateToken, async (req, res) => {
                 ':newRoses': {N: newRosesCount},
             },
         };
-  
+
         const category = 'Rose';
-  
+
         await dynamoDbClient.send(new UpdateCommand(decrementRosesParams));
-  
+
         let newLike = {userId, type, category};
-  
+
         if (type === 'image') {
             if (!image) {
                 return res
-                    .status(400)
-                    .json({message: 'Image URL is required for type "image"'});
+                .status(400)
+                .json({message: 'Image URL is required for type "image"'});
             }
             newLike.image = image;
-        } 
-        else if (type === 'prompt') {
+            } else if (type === 'prompt') {
             if (!prompt || !prompt.question || !prompt.answer) {
                 return res.status(400).json({
-                    message: 'Prompt question and answer are required for type "prompt"',
+                message: 'Prompt question and answer are required for type "prompt"',
                 });
             }
             newLike.prompt = prompt;
         }
-  
+
         if (comment) {
             newLike.comment = comment;
         }
-  
+
         // Step 1: Update the liked user's 'receivedLikes' array
         const updateReceivedLikesParams = {
             TableName: 'users',
@@ -943,9 +1012,9 @@ app.post('/send-rose', authenticateToken, async (req, res) => {
             },
             ReturnValues: 'UPDATED_NEW',
         };
-  
+
         await dynamoDbClient.send(new UpdateCommand(updateReceivedLikesParams));
-  
+
         // Step 2: Update the current user's 'likedProfiles' array
         const updateLikedProfilesParams = {
             TableName: 'users',
@@ -958,15 +1027,12 @@ app.post('/send-rose', authenticateToken, async (req, res) => {
             },
             ReturnValues: 'UPDATED_NEW',
         };
-  
+
         await dynamoDbClient.send(new UpdateCommand(updateLikedProfilesParams));
-  
+
         res.status(200).json({message: 'Rose sent successfully'});
     } catch (error) {
         console.log('Error', error);
         return res.status(500).json({message: 'Interval server error'});
     }
 });
-  
-
-
